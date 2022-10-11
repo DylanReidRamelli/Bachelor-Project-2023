@@ -1,6 +1,13 @@
 #include <iostream>
 #include <cuda.h>
 
+__global__ void RotateArray(int*originalA, int*newA, int degrees){
+    int x = threadIdx.x + blockDim.x * blockIdx.x;
+    int y = threadIdx.y + blockDim.y * threadIdx.y;
+
+    
+}
+
 __global__ void AddIntsCUDA(int *a, int *b){
     a[0] += b[0];
 }
