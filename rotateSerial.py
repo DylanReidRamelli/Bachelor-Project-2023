@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
 
+
+
+
 # As of 17 Oct, matplotlib does not work on 3.10 or above.
 
 
