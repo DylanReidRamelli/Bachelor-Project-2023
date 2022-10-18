@@ -8,8 +8,6 @@ import matplotlib.image as mpimg
 import numpy as np
 
 
-
-
 # As of 17 Oct, matplotlib does not work on 3.10 or above.
 
 def draw_rectangle(image, width, height):
@@ -21,25 +19,25 @@ def draw_rectangle(image, width, height):
             image[y*width + x] = value
 
 n = 100
-# image = np.array([0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0])
 image = np.array([0]*10000)
 draw_rectangle(image,100,100)
             
 plt.xlim([0, n])
 plt.ylim([0, n])
 
-# fig = plt.figure(figsize=(3, 1))
+fig = plt.figure(figsize=(3, 1))
 
+tuple = (10000,)
 
-# image.shape  = (-1,n)
-# print(image)
+image.shape  = (-1,n)
+# print(image.shape)
 
-# fig.add_subplot(n,n)
-# plt.imshow(image, cmap="gray")
+fig.add_subplot(n,n,1)
+plt.imshow(image, cmap="gray")
 # plt.show()
+image.shape = tuple
 
-
-angle = math.pi/4;
+angle = math.pi/4
 cosine_of_angle = cos(angle)
 sin_of_angle = sin(angle)
 def rotateScatter(A):
@@ -83,14 +81,17 @@ def rotateGather(A):
     return newA
     
         
-# rotatedimage = rotateScatter(image)
-# rotatedimage.shape = (-1,n)
+rotatedimage = rotateScatter(image)
+rotatedimage.shape = (-1,n)
 
-# fig.add_subplot(n,n)
+fig.add_subplot(n,n,2)
+plt.imshow(rotatedimage,cmap="gray")
 
 inverseimage = rotateGather(image)
 
 
 inverseimage.shape = (-1,n)
+fig.add_subplot(n,n,3)
 plt.imshow(inverseimage,cmap="gray")
 plt.show()
+plt.savefig("result.png")
