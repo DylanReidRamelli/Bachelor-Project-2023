@@ -32,6 +32,7 @@ int main(int argc, char const *argv[])
     cudaMemcpy(&a, d_a,sizeof(int), cudaMemcpyDeviceToHost);
 
 
+
     std::cout << "The answer is:" << a <<std::endl;
 
     cudaFree(d_a);
