@@ -3,12 +3,14 @@ from hmac import new
 from math import floor, pi
 import math
 from operator import index
+from xml.etree.ElementTree import tostring
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import numpy as np
+import numpy as np  
 
 
 # As of 17 Oct, matplotlib does not work on 3.10 or above.
+
 
 def draw_rectangle(image, width, height):
     for y in range(0,height):
@@ -17,30 +19,11 @@ def draw_rectangle(image, width, height):
             y_geometry = 1.0*y/height
             value = x_geometry > 0.25 and x_geometry < 0.75 and y_geometry > 0.25 and y_geometry < 0.75
             image[y*width + x] = value
-
-n = 100
-image = np.array([0]*10000)
-draw_rectangle(image,100,100)
             
-plt.xlim([0, n])
-plt.ylim([0, n])
-
-fig = plt.figure(figsize=(3, 1))
-
-tuple = (10000,)
-
-image.shape  = (-1,n)
-# print(image.shape)
-
-fig.add_subplot(n,n,1)
-plt.imshow(image, cmap="gray")
-# plt.show()
-image.shape = tuple
-
-angle = math.pi/4
-cosine_of_angle = cos(angle)
-sin_of_angle = sin(angle)
-def rotateScatter(A):
+            
+def rotateScatter(A,angle):
+    cosine_of_angle = cos(angle)
+    sin_of_angle = sin(angle)
     newA = np.array([0]*len(A))
     for i in range(0,len(A)):
         x = int(i % n)
@@ -60,7 +43,9 @@ def rotateScatter(A):
             
     return newA
 
-def rotateGather(A):
+def rotateGather(A,angle):
+    cosine_of_angle = cos(angle)
+    sin_of_angle = sin(angle)
     newA = np.array([0]*len(A))
     for i in range(0,len(newA)):
         x = int(i % n)
@@ -79,19 +64,56 @@ def rotateGather(A):
             newA[i] = A[idx]
             
     return newA
+
+n = 50
+tuple = (2500,)
+image = np.array([0]*2500)
+draw_rectangle(image,50,50)
+            
+plt.xlim([0, n])
+plt.ylim([0, n])
+
+image.shape  = (-1,n)
+
+plt.imshow(image, cmap="gray")
+plt.savefig("original_image.png")
+
+image.shape = tuple
+
+angle = math.pi/4
+
     
         
-rotatedimage = rotateScatter(image)
+rotatedimage = rotateScatter(image,angle)
 rotatedimage.shape = (-1,n)
 
-fig.add_subplot(n,n,2)
 plt.imshow(rotatedimage,cmap="gray")
+plt.savefig("scatterRotate_image.png")
 
-inverseimage = rotateGather(image)
 
+inverseimage = rotateGather(image,angle)
 
 inverseimage.shape = (-1,n)
-fig.add_subplot(n,n,3)
 plt.imshow(inverseimage,cmap="gray")
-plt.show()
-plt.savefig("result.png")
+plt.savefig("gatherRotate.png")
+
+
+max_frames = 90
+angle_animation = pi/180
+# Create n images of scatter and gather for ffmpeg video
+for i in range(0,max_frames):
+    rotatedimage = rotateScatter(image,angle_animation)
+    rotatedimage.shape = (-1,n)
+
+    plt.imshow(rotatedimage,cmap="gray")
+    plt.savefig("scatter/scatterRotate_image"+ str(i) + ".png")
+
+
+    # inverseimage = rotateGather(image,angle_animation)
+
+    # inverseimage.shape = (-1,n)
+    # plt.imshow(inverseimage,cmap="gray")
+    # plt.savefig("gather/gatherRotate_image" + str(i) + ".png")
+    angle_animation+=pi/180
+
+
