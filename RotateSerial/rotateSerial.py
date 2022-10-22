@@ -23,13 +23,13 @@ def draw_rectangle(image, width, height):
             image[y*width + x] = value
             
             
-def rotateScatter(A,angle):
+def rotateScatter(A,angle, width, height):
     cosine_of_angle = cos(angle)
     sin_of_angle = sin(angle)
     newA = np.array([0]*len(A),np.uint8)
     for i in range(0,len(A)):
-        x = int(i % n)
-        y = int(i / n)
+        x = int(i % width)
+        y = int(i / height)
         
         new_x = cosine_of_angle * x - sin_of_angle * y
         new_y = sin_of_angle * x + cosine_of_angle * y
@@ -40,8 +40,8 @@ def rotateScatter(A,angle):
         new_y = round(new_y)
         
         
-        if new_x < n and new_x >= 0 and new_y >= 0 and new_y < n:
-            idx = new_y * n + new_x
+        if new_x < width and new_x >= 0 and new_y >= 0 and new_y < height:
+            idx = new_y * width + new_x
             newA[idx] = A[i]
             
     return newA
@@ -68,14 +68,15 @@ def rotateGather(A,angle):
             
     return newA
 
-n = 50
-dims_tuple =(2000, 1303)
+# n = 50
+# dims_tuple =(2000, 1303)
 angle = math.pi/180
 # image = np.array([0]*2500)
 # draw_rectangle(image,50,50)
 
 # Import grayscale image.
-image = Image.open('Roberts-Claude-Shannon-1.jpg')
+# image = Image.open('Roberts-Claude-Shannon-1.jpg')
+image = Image.open('uva.jpg')
 
 # Save original image.
 image.save("original_image.png")
@@ -88,6 +89,8 @@ print("Some information regarding the numpy array of the image:",
 
 # print(image)
 
+
+
 modfied_image_array = np.zeros((image.shape[0], image.shape[1]))
 for i in range(0,image.shape[0]):
     for j in range(0,image.shape[1]):
@@ -95,17 +98,22 @@ for i in range(0,image.shape[0]):
 # image = np.reshape(image,dims_tuple)
 # print(modfied_image_array)
 modfied_image_array = modfied_image_array.flatten()
-print(modfied_image_array)
+
+# for i in range(0,len(modfied_image_array)):
+#     print(modfied_image_array[i],"\n")
 
 
         
-rotatedimage = rotateScatter(modfied_image_array,angle)
+rotatedimage = rotateScatter(modfied_image_array,angle,image.shape[0],image.shape[1])
+
+for i in range(0,len(rotatedimage)):
+    print(i,rotatedimage[i],"\n")
 
 # print(rotatedimage)
 
 
 # # print(rotatedimage)
-rotatedimage.shape = dims_tuple
+rotatedimage.shape = (544,669)
 
 print(rotatedimage)
 
