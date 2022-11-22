@@ -2,15 +2,15 @@ import math as m
 import matplotlib.pyplot as plt
 import numpy as np
 
-def rotateScatter(A, angle, width, height):
+def rotateScatter(A, angle, width, height, invalid_value):
 	# Find (x,y) coordinate.
-	dst_array = [np.NAN] * len(A)
+	dst_array = [invalid_value] * len(A)
 	for i in range(0,len(A)):
-		x = m.floor(i / width)
-		y = m.floor(i % width)
+		x = m.floor(i / height)
+		y = m.floor(i % height)
 		# Translate point to have relative coordinates to the center of the image.
-		c_x = m.floor(width / 2)
-		c_y = m.floor(height / 2)
+		c_x = width / 2.0
+		c_y = height / 2.0
 
 		x = x - c_x
 		y = y - c_y
@@ -31,22 +31,21 @@ def rotateScatter(A, angle, width, height):
 
 	return dst_array
 
-def rotateGather(A, angle, width, height):
+def rotateGather(A, angle, width, height, invalid_value):
 	# Find (x,y) coordinate.
-	dst_array = [np.NAN] * len(A)
+	dst_array = [invalid_value] * len(A)
 	for i in range(0,len(dst_array)):
-		x = m.floor(i / width)
-		y = m.floor(i % width)
+		x = m.floor(i / height)
+		y = m.floor(i % height)
 		# Translate point to have relative coordinates to the center of the image.
-		c_x = m.floor(width / 2)
-		c_y = m.floor(height / 2)
-
+		c_x = width / 2.0
+		c_y = height / 2.0
 		x = x - c_x
 		y = y - c_y
 
 		# Inverse rotate in respect to new origin.
-		dst_x = m.cos(angle)*x + m.sin(angle)*y
-		dst_y = -m.sin(angle)*x + m.cos(angle)*y
+		dst_x = m.cos(angle)*x - m.sin(angle)*y
+		dst_y = m.sin(angle)*x + m.cos(angle)*y 
 
 		# Make (0,0) the origin again
 
