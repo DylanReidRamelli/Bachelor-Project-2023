@@ -12,8 +12,8 @@ plt.rcParams['agg.path.chunksize'] = 1000000
 
 def main():
 	# Get 2-dimentional array of image.
-	img = Image.open("Roberts-Claude-Shannon-1.jpg").convert('L')
-	# img = Image.open("rectangle.png").convert('L')
+	# img = Image.open("Roberts-Claude-Shannon-1.jpg").convert('L')
+	img = Image.open("rectangle.png").convert('L')
 	# img = Image.open("square.png").convert('L')
 	# img = Image.open("uva.jpg").convert('L')
 	imgArray = np.array(img)
@@ -24,6 +24,8 @@ def main():
 	n_x = imgArray.shape[0]
 	n_y = imgArray.shape[1]
 
+	print(n_x,n_y)
+
 
 	# Reshape to 1-D
 	imgArray = imgArray.reshape((length))
@@ -32,6 +34,7 @@ def main():
 	# pdb.set_trace()
 	dst_array_scatter = b.rotateScatter(imgArray,alpha,n_x,n_y,0)
 	dst_array_gather = b.rotateGather(imgArray,alpha,n_x,n_y,0)
+	dst_array_gather_noloss, sizeX, sizeY = b.rotateGatherNoLoss(imgArray,alpha,n_x,n_y,0)
 
 	figure, axis = plt.subplots(2, 2)
 
@@ -40,7 +43,7 @@ def main():
 	axis[0, 0].set_title("Original_image")
 
 	# Final image
-	axis[0, 1].imshow(np.reshape(np.array(dst_array_gather, dtype=dtype), (n_x,n_y)))
+	axis[0, 1].imshow(np.reshape(np.array(dst_array_gather_noloss, dtype=dtype), (sizeX,sizeY)))
 	axis[0, 1].set_title("Resulting image (gather rotate)")
 
 	axis[1, 1].plot(imgArray, dst_array_scatter)
