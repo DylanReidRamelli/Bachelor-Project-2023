@@ -113,14 +113,19 @@ def rotateGatherNoLoss(A, angle, width, height, invalid_value):
 	sizeY = m.ceil(max(minmin[1],maxmin[1],minmax[1],maxmax[1]) - min(minmin[1],maxmin[1],minmax[1],maxmax[1]))
 
 	dst_array = [invalid_value] * sizeX * sizeY
+
+	c_x_in = width / 2.0
+	c_y_in = height / 2.0
+	c_x_out = sizeX / 2.0
+	c_y_out = sizeY / 2.0
+
 	for i in range(0,len(dst_array)):
-		x = m.floor(i / height)
-		y = m.floor(i % height)
+		x = m.floor(i / sizeY)
+		y = m.floor(i % sizeY)
 		# Translate point to have relative coordinates to the center of the image.
-		c_x = width / 2.0
-		c_y = height / 2.0
-		x = x - c_x
-		y = y - c_y
+
+		x = x - c_x_out
+		y = y - c_y_out
 
 		# Inverse rotate in respect to new origin.
 		dst_x = m.cos(angle)*x - m.sin(angle)*y
@@ -128,12 +133,12 @@ def rotateGatherNoLoss(A, angle, width, height, invalid_value):
 
 		# Make (0,0) the origin again
 
-		dst_x = int(dst_x + c_x)
-		dst_y = int(dst_y + c_y)
+		dst_x = int(dst_x + c_x_in)
+		dst_y = int(dst_y + c_y_in)
 
 		if dst_x >= 0 and dst_x < width and dst_y >= 0 and dst_y < height:
 			# Find index
 			idx = dst_x * height + dst_y
 			dst_array[i] = A[idx]
 
-	return dst_array, sizeY, sizeX
+	return dst_array, sizeX, sizeY
