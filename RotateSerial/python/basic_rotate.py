@@ -70,9 +70,9 @@ def rotateGatherNoLoss(A, angle, width, height, invalid_value):
 	c_y = width / 2.0
 
 	minmin = np.array([0,0])
-	maxmin = np.array([height,0])
-	minmax = np.array([0,width])
-	maxmax = np.array([height,width])
+	maxmin = np.array([width,0])
+	minmax = np.array([0,height])
+	maxmax = np.array([width,height])
 
 	minmin[0] = minmin[0] - c_x
 	minmin[1] = minmin[1] - c_y
