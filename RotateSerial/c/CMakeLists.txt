@@ -7,23 +7,27 @@ project(
   DESCRIPTION "C++ and C read and rotate images.")
 
 find_package(Boost)
+find_package(PNG)
 
 add_library(Rotate INTERFACE)
 target_include_directories(Rotate INTERFACE core/)
-
-find_library(READ_PNG libpng)
 
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   target_link_libraries(Rotate ${Boost_LIBRARIES})
 endif()
 
-if(READ_PNG_FOUND)
-  target_link_libraries(Rotate ${READ_PNG_LIBRARIES})
-
+if(PNG_FOUND)
+  include_directories(${PNG_INCLUDE_DIRS})
+  target_link_libraries(Rotate INTERFACE ${PNG_LIBRARIES})
 endif()
 
 add_executable(main drivers/main.cpp)
 target_link_libraries(main Rotate)
 
 target_compile_features(main PRIVATE cxx_std_17)
+
+add_executable(mainC drivers/main.c)
+target_link_libraries(mainC Rotate)
+
+target_compile_features(mainC PRIVATE cxx_std_17)

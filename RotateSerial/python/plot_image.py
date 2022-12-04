@@ -14,11 +14,11 @@ def main():
 	# Get 2-dimentional array of image.
 	# img = Image.open("Roberts-Claude-Shannon-1.jpg").convert('L')
 	img = Image.open("../images/rectangle.png").convert('L')
-	# img = Image.open("square.png").convert('L')
+	# img = Image.open("../images/square.png").convert('L')
 	# img = Image.open("uva.jpg").convert('L')
 	imgArray = np.array(img)
 
-	alpha = m.pi/10
+	alpha = m.pi/4
 	# take out a color rotate it, then do the same for each channel.
 	length = imgArray.shape[0] * imgArray.shape[1]
 	n_x = imgArray.shape[0]

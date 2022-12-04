@@ -3,8 +3,6 @@
 
 #include "posix-util.h"
 
-#include "rpng.h"
-
 void rpng(const char *pathname, int *const xc, int *const yc,
           unsigned char **const out) {
   FILE *fp = NULL;
@@ -76,7 +74,7 @@ void rpng(const char *pathname, int *const xc, int *const yc,
 
   const ptrdiff_t rc = height, pc = width;
 
-  unsigned char *data = malloc(4 * rc * pc);
+  unsigned char *data = (unsigned char *)malloc(4 * rc * pc);
 
   /* RGB to RGBA conversion by default now */
   for (int r = 0; r < rc; ++r) {

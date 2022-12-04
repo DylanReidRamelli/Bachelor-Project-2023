@@ -5,7 +5,7 @@
 #include <string.h>
 #include <vector>
 
-std::vector<float> rotateScatter(const std::vector<float> A, const float angle,
+std::vector<float> rotateScatter(const std::vector<float> &A, const float angle,
                                  const int width, const int height) {
   std::vector<float> dst_array(A.size());
   float c_x = width / 2.0;
@@ -26,8 +26,8 @@ std::vector<float> rotateScatter(const std::vector<float> A, const float angle,
 
     if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
       int idx = dst_x * height + dst_y;
-      auto it = dst_array.begin() + idx;
-      dst_array.insert(it, A[i]);
+      // auto it = dst_array.begin() + idx;
+      dst_array[idx] = A[i];
     }
   }
 

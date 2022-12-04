@@ -6,8 +6,12 @@
 #include <stdlib.h>
 
 int main(int argc, const char *argv[]) {
-  const char *pathname = "../../images/rectangle.png";
-  unsigned char **out;
+  char *pathname = "../../images/rectangle.png";
+  unsigned char *out = "../../images/modified_rectangle.png";
+
   rpng(pathname, 300, 200, out);
+
+  // printf("%s", out);
+
   return 0;
 }
