@@ -2,16 +2,43 @@
 #include "../core/read-png.h"
 #include <assert.h>
 #include <math.h>
+#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(int argc, const char *argv[]) {
-  char *pathname = "../../images/rectangle.png";
-  unsigned char *out = "../../images/modified_rectangle.png";
+  const char *pathname = "../../images/rectangle.png";
+  unsigned char *out;
 
-  rpng(pathname, 300, 200, out);
+  int width = 300;
+  int height = 200;
 
-  // printf("%s", out);
+  // Read image and store in 2D array.
+  png_infop info_ptr = rpng(pathname, &width, &height, &out);
+
+  int A[width * height];
+  int result[width * height];
+
+  // Store 2D array in 1D
+  for (int i = 0; i < width; i++) {
+    for (int j = 0; j < height; j++) {
+      int value = (int)out[i * height + j];
+      A[height * i + j] = value;
+    }
+  }
+
+  // Rotate values of 1D array.
+  rotateScatter(A, result, M_PI / 4.0, width, height);
+
+  free(info_ptr);
+
+  FILE *fp = fopen("test_image.bin", "wb");
+  if (fp) {
+    size_t r = fwrite(A, sizeof A[0], width * height, fp);
+    printf("wrote %zu elements out of %d requested\n", r, width * height);
+  }
+
+  fclose(fp);
 
   return 0;
 }

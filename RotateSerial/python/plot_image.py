@@ -12,8 +12,8 @@ plt.rcParams['agg.path.chunksize'] = 1000000
 
 def main():
 	# Get 2-dimentional array of image.
-	# img = Image.open("Roberts-Claude-Shannon-1.jpg").convert('L')
-	img = Image.open("../images/rectangle.png").convert('L')
+	img = Image.open("../images/Roberts-Claude-Shannon-1.jpg").convert('L')
+	# img = Image.open("../images/rectangle.png").convert('L')
 	# img = Image.open("../images/square.png").convert('L')
 	# img = Image.open("uva.jpg").convert('L')
 	imgArray = np.array(img)

@@ -30,4 +30,3 @@ target_compile_features(main PRIVATE cxx_std_17)
 add_executable(mainC drivers/main.c)
 target_link_libraries(mainC Rotate)
 
-target_compile_features(mainC PRIVATE cxx_std_17)

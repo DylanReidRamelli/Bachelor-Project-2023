@@ -3,14 +3,15 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 
+
 def main():
 	n_x = 20
 	n_y = 20
 	n = n_x * n_y
 	init_array = np.linspace(0,n,num=n)
 	# init_array = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
-	dst_array_scatter = b.rotateScatter(init_array,m.pi/4,n_x,n_y)
-	dst_array_gather = b.rotateGather(init_array,m.pi/4,n_x,n_y)
+	dst_array_scatter = b.rotateScatter(init_array,m.pi/4,n_x,n_y, 0)
+	dst_array_gather = b.rotateGather(init_array,m.pi/4,n_x,n_y, 0)
 
 	figure, axis = plt.subplots(2, 2)
 

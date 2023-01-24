@@ -3,8 +3,8 @@
 
 #include "posix-util.h"
 
-void rpng(const char *pathname, int *const xc, int *const yc,
-          unsigned char **const out) {
+png_infop rpng(const char *pathname, int *const xc, int *const yc,
+               unsigned char **const out) {
   FILE *fp = NULL;
   POSIX_CHECK(fp = fopen(pathname, "rb"));
 
@@ -101,4 +101,6 @@ void rpng(const char *pathname, int *const xc, int *const yc,
   POSIX_CHECK(0 == fclose(fp));
 
   png_destroy_read_struct(&png, &info, NULL);
+
+  return info;
 }
