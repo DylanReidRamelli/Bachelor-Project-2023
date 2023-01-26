@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 int main(int argc, const char *argv[]) {
-  const char *pathname = "../../images/rectangle.png";
+  const char *pathname = "../../images/square.png";
   unsigned char *out;
 
   int width = 300;
@@ -19,22 +19,25 @@ int main(int argc, const char *argv[]) {
   int A[width * height];
   int result[width * height];
 
-  // Store 2D array in 1D
-  for (int i = 0; i < width; i++) {
-    for (int j = 0; j < height; j++) {
-      int value = (int)out[i * height + j];
-      A[height * i + j] = value;
-    }
-  }
+  // Store 1D char array in 1D int array.
+  // for (int i = 0; i < height; i++) {
+  //   for (int j = 0; j < width; j++) {
+  //     // int value = (int)out[i * width + j];
+  //     // A[width * i + j] = value;
+  //   }
+  // }
 
   // Rotate values of 1D array.
-  rotateScatter(A, result, M_PI / 4.0, width, height);
+  // rotateScatter(A, result, M_PI / 4.0, width, height);
 
   free(info_ptr);
 
   FILE *fp = fopen("test_image.bin", "wb");
   if (fp) {
-    size_t r = fwrite(A, sizeof A[0], width * height, fp);
+    // for (int i = 0; i < width * height; i++) {
+    //   fprintf(fp, "%d\n", A[i]);
+    // }
+    size_t r = fwrite(out, sizeof(unsigned char), width * height, fp);
     printf("wrote %zu elements out of %d requested\n", r, width * height);
   }
 
