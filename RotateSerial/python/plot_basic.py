@@ -19,6 +19,8 @@ def main():
 	axis[0, 0].imshow(np.reshape(np.array(init_array, dtype=np.float32), (n_x,n_y)))
 	axis[0, 0].set_title("Original_image")
 
+	print(init_array.shape)
+
 	# Final image
 	axis[0, 1].imshow(np.reshape(np.array(dst_array_gather, dtype=np.float32), (n_x,n_y)))
 	axis[0, 1].set_title("Resulting image (gather rotate)")

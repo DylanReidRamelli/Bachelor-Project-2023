@@ -7,7 +7,8 @@
 #include <stdlib.h>
 
 int main(int argc, const char *argv[]) {
-  const char *pathname = "../../images/square.png";
+  // const char *pathname = "../../images/Roberts-Claude-Shannon-1.png";
+  const char *pathname = "../../images/rectangle.png";
   unsigned char *out;
 
   int width = 300;
@@ -32,12 +33,12 @@ int main(int argc, const char *argv[]) {
 
   free(info_ptr);
 
-  FILE *fp = fopen("test_image.bin", "wb");
+  FILE *fp = fopen("test_image", "wb");
   if (fp) {
     // for (int i = 0; i < width * height; i++) {
     //   fprintf(fp, "%d\n", A[i]);
     // }
-    size_t r = fwrite(out, sizeof(unsigned char), width * height, fp);
+    size_t r = fwrite(out, sizeof(out[0]), width * height, fp);
     printf("wrote %zu elements out of %d requested\n", r, width * height);
   }
 

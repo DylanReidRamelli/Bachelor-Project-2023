@@ -2,8 +2,9 @@
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-import math as m
-from array import array
+from matplotlib import image as mpimg
+from PIL import Image
+import io
 
 # with open(image_info_path,"r") as f:
 # 	lines = f.readlines()
@@ -12,28 +13,20 @@ from array import array
 
 
 def main(image_path):
-    nx = 200
+    nx = 300
     ny = 200
+    n = nx * ny
 
-    # f = open(image_path, "r")
-    # data = f.read()
-    # data = data.split("\n")
-    # for i in range(0,len(data)):
-    #     if data[i] == '':
-    #         data.pop(i)
-    #     else:
-    #         data[i] = int(data[i])
-    # f.close()
+    file = open(image_path, 'rb')
+    image_data = file.read()
+    img = Image.frombytes("L", (300,200), image_data)
 
-    # data = np.array(data)
-    dtype = np.dtype("B")
-    with open(image_path, "rb") as f:
-        numpy_data = np.fromfile(f, dtype)
-        numpy_data = np.array(numpy_data, dtype=dtype) 
-        numpy_data = np.reshape(numpy_data, (nx,ny))
-        figure, axis = plt.subplots()
-        image = axis.imshow(numpy_data)
-        plt.show()
+    plt.title("Original Image")
+    plt.xlabel("X pixel scaling.")
+    plt.ylabel("Y pixel scaling.")
+
+    plt.imshow(img)
+    plt.show()
 
 
 if __name__ == "__main__":
