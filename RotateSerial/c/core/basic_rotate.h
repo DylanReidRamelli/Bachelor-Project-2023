@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 
-void rotateScatter(const int A[], int dst_array[], const float angle,
+void rotateScatter(const float A[], float dst_array[], const float angle,
                    const int width, const int height) {
 
   float c_x = width / 2.0;
@@ -17,7 +17,7 @@ void rotateScatter(const int A[], int dst_array[], const float angle,
     y = y - c_y;
 
     float dst_x = cos(angle) * x - sin(angle) * y;
-    float dst_y = sin(angle) * x - cos(angle) * y;
+    float dst_y = sin(angle) * x + cos(angle) * y;
 
     dst_x = floor(dst_x + c_x);
     dst_y = floor(dst_y + c_y);

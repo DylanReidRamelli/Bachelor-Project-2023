@@ -8,6 +8,7 @@ def rotateScatter(A, angle, width, height, invalid_value):
 	for i in range(0,len(A)):
 		x = m.floor(i / height)
 		y = m.floor(i % height)
+
 		# Translate point to have relative coordinates to the center of the image.
 		c_x = width / 2.0
 		c_y = height / 2.0
