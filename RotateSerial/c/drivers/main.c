@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   float result[n];
 
   // Populate result array with 0's.
-  memset(result, 0, n * sizeof(float));
+  // memset(result, 0, n * sizeof(float));
 
   // Open input image and populate input array A.
   FILE *raw_p = fopen(pathname, "rb");
@@ -39,7 +39,14 @@ int main(int argc, char *argv[]) {
   // Rotate values of 1D input array and store in result.
   // rotateScatter(A, result, M_PI / 4, width, height);
   // rotateGather(A, result, M_PI / 4, width, height);
-  rotateGatherNoLoss(A, result, M_PI / 4, width, height);
+
+  int newSize[2] = {0, 0};
+  rotateGatherNoLoss(A, result, M_PI / 4, width, height, newSize);
+
+  FILE *fpdata = fopen("image_info.raw", "w");
+  if (fpdata) {
+    fprintf(fpdata, "%i,%i", newSize[0], newSize[1]);
+  }
 
   // Open output file and write result array.
   FILE *fp = fopen("test_image.raw", "wb");
@@ -49,6 +56,7 @@ int main(int argc, char *argv[]) {
   }
 
   fclose(fp);
+  fclose(fpdata);
   fclose(raw_p);
 
   return 0;
