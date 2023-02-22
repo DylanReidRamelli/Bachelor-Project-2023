@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     // Rotate values of 1D input array and store in result.
     int newSize[2] = {0, 0};
-    rotateGatherNoLoss(A, result, 0, width, height, newSize);
+    rotateGatherNoLoss(A, result, M_PI / 4, width, height, newSize);
 
     FILE *fpdata = fopen("image_info.raw", "w");
     if (fpdata) {

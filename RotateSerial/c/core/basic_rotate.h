@@ -87,7 +87,6 @@ void rotateScatter(const float A[], float dst_array[], const float angle,
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
-  int size = width * height;
 
   // Iterating horizontally through the image.
   for (int i = 0; i < height; i++) {
@@ -131,7 +130,6 @@ void rotateGather(const float A[], float dst_array[], const float angle,
                   const int width, const int height) {
   float c_x = width / 2.0;
   float c_y = height / 2.0;
-  int size = width * height;
 
   // Iterating horizontally through the image.
   for (int i = 0; i < height; i++) {
