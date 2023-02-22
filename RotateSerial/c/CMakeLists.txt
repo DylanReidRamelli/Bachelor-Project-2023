@@ -27,6 +27,9 @@ target_link_libraries(main Rotate)
 
 target_compile_features(main PRIVATE cxx_std_17)
 
-add_executable(mainC drivers/main.c)
-target_link_libraries(mainC Rotate)
+add_executable(rotate_loss drivers/rotate_loss.c)
+target_link_libraries(rotate_loss Rotate)
+
+add_executable(rotate_noloss drivers/rotate_noloss.c)
+target_link_libraries(rotate_noloss Rotate)
 
