@@ -5,7 +5,7 @@
 
 // Find max value in array of float.
 float max(float input[], int size) {
-  float max_value = 0;
+  float max_value = input[0];
   for (int i = 0; i < size; i++) {
     if (input[i] > max_value)
       max_value = input[i];
@@ -15,7 +15,7 @@ float max(float input[], int size) {
 
 // Find min value in array of float.
 float min(float input[], int size) {
-  float min_value = 0;
+  float min_value = input[0];
   for (int i = 0; i < size; i++) {
     if (input[i] < min_value)
       min_value = input[i];
@@ -32,7 +32,7 @@ void rotation(float coordinate[2], int idx, float angle) {
 }
 
 // 2D corner rotation.
-void rotateCorners(float output[2], int width, int height, float angle) {
+void rotateCorners(int output[2], int width, int height, float angle) {
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
@@ -61,13 +61,20 @@ void rotateCorners(float output[2], int width, int height, float angle) {
   }
 
   for (int j = 0; j < 8; j = j + 2) {
-    printf("nx:%f, ny:%f\n", corners[j], corners[j + 1]);
+    // printf("nx:%f, ny:%f\n", corners[j], corners[j + 1]);
   }
 
   float x_values[] = {corners[0], corners[2], corners[4], corners[6]};
   float y_values[] = {corners[1], corners[3], corners[5], corners[7]};
+
+  for (int j = 0; j < 4; j++) {
+    // printf("nx:%f\n", x_values[j]);
+  }
+
   int sizeX = ceil(max(x_values, 4) - min(x_values, 4));
   int sizeY = ceil(max(y_values, 4) - min(y_values, 4));
+
+  // printf("sizex:%i, sizey:%i\n", sizeX, sizeY);
 
   output[0] = sizeX;
   output[1] = sizeY;
@@ -94,8 +101,8 @@ void rotateScatter(const float A[], float dst_array[], const float angle,
 
       // Subtract center coordinates, so that we rotate with respect to the
       // center of the image.
-      float x = i - c_x;
-      float y = j - c_y;
+      float x = j - c_x;
+      float y = i - c_y;
 
       // Rotation operation
       float dst_x = cos(angle) * x - sin(angle) * y;
@@ -137,8 +144,8 @@ void rotateGather(const float A[], float dst_array[], const float angle,
 
       // Subtract center coordinates, so that we rotate with respect to the
       // center of the image.
-      float x = i - c_x;
-      float y = j - c_y;
+      float x = j - c_x;
+      float y = i - c_y;
 
       // Rotation operation
       float dst_x = cos(angle) * x - sin(angle) * y;
@@ -163,20 +170,25 @@ void rotateGather(const float A[], float dst_array[], const float angle,
 void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
                         int width, int height, int mSize[2]) {
 
-  float newSize[2] = {0.0, 0.0};
+  int newSize[2] = {0, 0};
   rotateCorners(newSize, width, height, angle);
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
   float c_x_out = newSize[0] / 2.0;
   float c_y_out = newSize[1] / 2.0;
+  // For python.
+  mSize[0] = (int)newSize[0];
+  mSize[1] = (int)newSize[1];
 
-  float *new_dst_array =
-      realloc(dst_array, newSize[0] * newSize[1] * sizeof(float));
+  // printf("%f, %f", c_x_out, c_y_out);
 
-  if (new_dst_array) {
+  dst_array =
+      (float *)realloc(dst_array, newSize[0] * newSize[1] * sizeof(float));
 
-    memset(new_dst_array, 0, newSize[0] * newSize[1] * sizeof(float));
+  if (dst_array) {
+
+    memset(dst_array, 0, newSize[0] * newSize[1] * sizeof(float));
 
     // Iterating horizontally through the image.
     for (int i = 0; i < newSize[1]; i++) {
@@ -184,8 +196,8 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
 
         // Subtract center coordinates, so that we rotate with respect to the
         // center of the image.
-        float x = i - c_x_out;
-        float y = j - c_y_out;
+        float x = j - c_x_out;
+        float y = i - c_y_out;
 
         // Rotation operation
         float dst_x = cos(angle) * x - sin(angle) * y;
@@ -195,21 +207,15 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
         dst_x = (int)(dst_x + c_x);
         dst_y = (int)(dst_y + c_y);
 
-        // Check if the resulting point is inside the boundary of the image,i.e
-        // 0->max_x, 0->max_y.
+        // Check if the resulting point is inside the boundary of the
+        // image,i.e 0->max_x, 0->max_y.
         if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
           // If so then assign value from original array to dst_array at idx
           // location.
           int idx = dst_y * width + dst_x;
-          new_dst_array[i * width + j] = A[idx];
+          dst_array[i * mSize[0] + j] = A[idx];
         }
       }
     }
-
-    // For python.
-    mSize[0] = (int)newSize[0];
-    mSize[1] = (int)newSize[1];
   }
-
-  free(new_dst_array);
 }

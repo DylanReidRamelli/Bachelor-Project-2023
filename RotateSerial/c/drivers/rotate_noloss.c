@@ -17,6 +17,12 @@ int main(int argc, char *argv[]) {
     height = atoi(argv[2]);
   }
 
+  if (argc == 4) {
+    width = atoi(argv[1]);
+    height = atoi(argv[2]);
+    pathname = argv[3];
+  }
+
   // Declare initial variables.
   const int n = width * height;
   float A[n];
@@ -40,7 +46,7 @@ int main(int argc, char *argv[]) {
 
     // Rotate values of 1D input array and store in result.
     int newSize[2] = {0, 0};
-    rotateGatherNoLoss(A, result, M_PI / 4, width, height, newSize);
+    rotateGatherNoLoss(A, result, M_PI / 6, width, height, newSize);
 
     FILE *fpdata = fopen("image_info.raw", "w");
     if (fpdata) {
