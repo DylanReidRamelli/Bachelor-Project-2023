@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
   // const char *pathname = "../../images/Roberts-Claude-Shannon-1.png";
-  const char *pathname = "../../images/data_rectangle.raw";
+  const char *pathname = "../../../Images/data_rectangle.raw";
   int width = 300;
   int height = 200;
 

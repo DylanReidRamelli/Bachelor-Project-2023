@@ -25,8 +25,11 @@ int main(int argc, char const *argv[])
     cudaMemcpy(d_a, &a, sizeof(int), cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, &b, sizeof(int), cudaMemcpyHostToDevice);
 
+    // dim3 threadsPerBlock(16, 16);
+    // dim3 numBlocks(N / threadsPerBlock.x, N / threadsPerBlock.y);
 
-    AddIntsCUDA<<<1,1>>>(d_a,d_b);
+
+    AddIntsCUDA<<<numBlocks,threadsPerBlock>>>(d_a,d_b);
 
 
     cudaMemcpy(&a, d_a,sizeof(int), cudaMemcpyDeviceToHost);
