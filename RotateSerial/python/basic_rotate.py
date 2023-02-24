@@ -67,8 +67,8 @@ def roationMatrix(angle,position):
 
 
 def rotateGatherNoLoss(A, angle, width, height, invalid_value):
-	c_x = height/ 2.0
-	c_y = width / 2.0
+	c_x = width/ 2.0
+	c_y = height / 2.0
 
 	minmin = np.array([0,0])
 	maxmin = np.array([width,0])
@@ -129,8 +129,8 @@ def rotateGatherNoLoss(A, angle, width, height, invalid_value):
 		y = y - c_y_out
 
 		# Inverse rotate in respect to new origin.
-		dst_x = m.cos(angle)*x - m.sin(angle)*y
-		dst_y = m.sin(angle)*x + m.cos(angle)*y 
+		dst_x = m.cos(angle)*x + m.sin(angle)*y
+		dst_y = -m.sin(angle)*x + m.cos(angle)*y 
 
 		# Make (0,0) the origin again
 

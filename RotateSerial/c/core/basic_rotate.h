@@ -67,9 +67,9 @@ void rotateCorners(int output[2], int width, int height, float angle) {
   float x_values[] = {corners[0], corners[2], corners[4], corners[6]};
   float y_values[] = {corners[1], corners[3], corners[5], corners[7]};
 
-  for (int j = 0; j < 4; j++) {
-    // printf("nx:%f\n", x_values[j]);
-  }
+  // for (int j = 0; j < 4; j++) {
+  //   // printf("nx:%f\n", x_values[j]);
+  // }
 
   int sizeX = ceil(max(x_values, 4) - min(x_values, 4));
   int sizeY = ceil(max(y_values, 4) - min(y_values, 4));
@@ -171,24 +171,26 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
                         int width, int height, int mSize[2]) {
 
   int newSize[2] = {0, 0};
+
+  // Rotate corners and get new dimentions of image.
   rotateCorners(newSize, width, height, angle);
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
   float c_x_out = newSize[0] / 2.0;
   float c_y_out = newSize[1] / 2.0;
+
+  printf("Size of new image: nx:%i, ny:%i\n", newSize[0], newSize[1]);
+
   // For python.
-  mSize[0] = (int)newSize[0];
-  mSize[1] = (int)newSize[1];
+  mSize[0] = newSize[0];
+  mSize[1] = newSize[1];
 
-  // printf("%f, %f", c_x_out, c_y_out);
-
-  dst_array =
-      (float *)realloc(dst_array, newSize[0] * newSize[1] * sizeof(float));
+  dst_array = (float *)realloc(dst_array, mSize[0] * mSize[1] * sizeof(float));
 
   if (dst_array) {
 
-    memset(dst_array, 0, newSize[0] * newSize[1] * sizeof(float));
+    memset(dst_array, 0, mSize[0] * mSize[1] * sizeof(float));
 
     // Iterating horizontally through the image.
     for (int i = 0; i < newSize[1]; i++) {
@@ -200,8 +202,8 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
         float y = i - c_y_out;
 
         // Rotation operation
-        float dst_x = cos(angle) * x - sin(angle) * y;
-        float dst_y = sin(angle) * x + cos(angle) * y;
+        float dst_x = cos(angle) * x + sin(angle) * y;
+        float dst_y = -sin(angle) * x + cos(angle) * y;
 
         // Add back the center "vector"
         dst_x = (int)(dst_x + c_x);
