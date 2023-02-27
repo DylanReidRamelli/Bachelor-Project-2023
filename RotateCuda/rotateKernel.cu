@@ -39,6 +39,42 @@ __global__ void rotateScatter(float *A, float *dst_array, const float angle,
 	}
 }
 
+
+
+__global__ void rotateGather(float *A, float *dst_array, const float angle,
+							  const int width, const int height){
+								float c_x = width / 2.0;
+	float c_y = height / 2.0;
+
+	int tid = (blockIdx.x *blockDim.x) + threadIdx.x ;
+
+	float x = int(tid % width);
+	float y = int(tid / height);
+
+	// Subtract center coordinates, so that we rotate with respect to the
+	// center of the image.
+	x = x - c_x;
+	y = y - c_y;
+
+	// Rotation operation
+	float dst_x = cos(angle) * x - sin(angle) * y;
+	float dst_y = sin(angle) * x + cos(angle) * y;
+
+	// Add back the center "vector"
+	dst_x = (int)(dst_x + c_x);
+	dst_y = (int)(dst_y + c_y);
+
+	// Check if the resulting point is inside the boundary of the image, i.e
+	// 0->max_x, 0->max_y.
+	if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height)
+	{
+		// If so then assign value from original array to dst_array at idx
+		// location.
+		int idx = dst_y * width + dst_x;
+		dst_array[tid] = A[idx];
+	}
+							  }
+
 int main()
 {
 	const char *pathname = "../Images/data_rectangle.raw";
@@ -60,6 +96,7 @@ int main()
 		fread(A, sizeof(float), n, raw_p);
 	}
 
+	// Can create a kernel for this as well, or just add it in the rotation kernel.
 	// Modify input array A by normalizing values from 0->1.
 	for (int i = 0; i < n; ++i)
 	{
@@ -78,7 +115,7 @@ int main()
 	int NUM_BLOCKS = (int)ceil(n/NUM_THREADS);
 
 	// // Call Kernel rotateScatter
-	rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
+	rotateGather<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
 
 	cudaMemcpy(R, d_out, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
