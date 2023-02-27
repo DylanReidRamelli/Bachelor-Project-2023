@@ -62,9 +62,9 @@ def read_data_no_loss(image_path, image_info):
 
 
 if __name__ == "__main__":
-    write_data()
+    # write_data()
     # main()
-    # if len(sys.argv) == 3:
-    #     read_data_no_loss(sys.argv[1], sys.argv[2])
-    # else:
-    #     read_data(sys.argv[1])
+    if len(sys.argv) == 3:
+        read_data_no_loss(sys.argv[1], sys.argv[2])
+    else:
+        read_data(sys.argv[1])
