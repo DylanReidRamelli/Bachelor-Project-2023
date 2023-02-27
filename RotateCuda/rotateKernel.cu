@@ -10,7 +10,7 @@ __global__ void rotateScatter(float *A, float *dst_array, const float angle,
 	float c_x = width / 2.0;
 	float c_y = height / 2.0;
 
-	int tid = (blockIdx.x *blockDim.x) + threadIdx.x ;
+	int tid = (blockIdx.x * blockDim.x) + threadIdx.x;
 
 	float x = int(tid % width);
 	float y = int(tid / height);
@@ -39,14 +39,13 @@ __global__ void rotateScatter(float *A, float *dst_array, const float angle,
 	}
 }
 
-
-
 __global__ void rotateGather(float *A, float *dst_array, const float angle,
-							  const int width, const int height){
-								float c_x = width / 2.0;
+							 const int width, const int height)
+{
+	float c_x = width / 2.0;
 	float c_y = height / 2.0;
 
-	int tid = (blockIdx.x *blockDim.x) + threadIdx.x ;
+	int tid = (blockIdx.x * blockDim.x) + threadIdx.x;
 
 	float x = int(tid % width);
 	float y = int(tid / height);
@@ -73,7 +72,7 @@ __global__ void rotateGather(float *A, float *dst_array, const float angle,
 		int idx = dst_y * width + dst_x;
 		dst_array[tid] = A[idx];
 	}
-							  }
+}
 
 int main()
 {
@@ -86,7 +85,7 @@ int main()
 	float *R = (float *)malloc(sizeof(float) * n);
 
 	memset(R, 0, n * sizeof(float));
-	
+
 	float *d_a, *d_out;
 
 	// Open input image and populate input array A.
@@ -112,9 +111,10 @@ int main()
 	cudaMemcpy(d_out, R, sizeof(float) * n, cudaMemcpyHostToDevice);
 
 	int NUM_THREADS = 256;
-	int NUM_BLOCKS = (int)ceil(n/NUM_THREADS);
+	int NUM_BLOCKS = (int)ceil(n / NUM_THREADS);
 
 	// // Call Kernel rotateScatter
+	// rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
 	rotateGather<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
 
 	cudaMemcpy(R, d_out, sizeof(float) * n, cudaMemcpyDeviceToHost);
