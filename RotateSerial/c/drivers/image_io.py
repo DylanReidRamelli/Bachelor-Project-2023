@@ -16,12 +16,12 @@ def write_data():
 
 
 def read_data(image_path):
-    nx = 300
-    ny = 200
-    n = nx * ny
+    nx = 1303
+    ny = 2000
 
     # Load the data from the file
     data = np.fromfile(image_path, dtype=np.float32)
+    n = nx * ny
     data = np.reshape(data, (ny, nx))
 
     print(data)
