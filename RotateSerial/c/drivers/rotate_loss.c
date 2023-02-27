@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  // const char *pathname = "../../images/Roberts-Claude-Shannon-1.png";
-  const char *pathname = "../../../Images/data_rectangle.raw";
-  int width = 300;
-  int height = 200;
+  const char *pathname = "../../../Images/data_roberts.raw";
+  // const char *pathname = "../../../Images/data_rectangle.raw";
+  int width = 1303;
+  int height = 2000;
 
   if (argc == 3) {
     width = atoi(argv[1]);
