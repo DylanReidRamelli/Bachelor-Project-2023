@@ -1,18 +1,18 @@
-#include "../core/basic_rotate.h"
-#include "../core/read-png.h"
+#include "basic_rotate.h"
 #include <assert.h>
 #include <math.h>
-#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   const char *pathname = "../../../Images/data_roberts.raw";
   // const char *pathname = "../../../Images/data_rectangle.raw";
   int width = 1303;
   int height = 2000;
 
-  if (argc == 3) {
+  if (argc == 3)
+  {
     width = atoi(argv[1]);
     height = atoi(argv[2]);
   }
@@ -27,12 +27,14 @@ int main(int argc, char *argv[]) {
 
   // Open input image and populate input array A.
   FILE *raw_p = fopen(pathname, "rb");
-  if (raw_p) {
+  if (raw_p)
+  {
     fread(A, sizeof(float), n, raw_p);
   }
 
   // Modify input array A by normalizing values from 0->1.
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < n; ++i)
+  {
     A[i] = A[i] / 255.0;
   }
 
@@ -42,7 +44,8 @@ int main(int argc, char *argv[]) {
 
   // Open output file and write result array.
   FILE *fp = fopen("test_image.raw", "wb");
-  if (fp) {
+  if (fp)
+  {
     size_t r = fwrite(result, sizeof(result[0]), n, fp);
     printf("wrote %zu elements out of %d requested\n", r, n);
   }
