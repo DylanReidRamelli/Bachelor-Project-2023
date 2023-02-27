@@ -10,47 +10,47 @@ __global__ void rotateScatter(float *A, float *dst_array, const float angle,
 	float c_x = width / 2.0;
 	float c_y = height / 2.0;
 
-	// Iterating horizontally through the image.
-	for (int i = 0; i < height; i++)
+	int tid = (blockIdx.x *blockDim.x) + threadIdx.x ;
+
+	float x = int(tid % width);
+	float y = int(tid / height);
+
+	// Subtract center coordinates, so that we rotate with respect to the
+	// center of the image.
+	x = x - c_x;
+	y = y - c_y;
+
+	// Rotation operation
+	float dst_x = cos(angle) * x - sin(angle) * y;
+	float dst_y = sin(angle) * x + cos(angle) * y;
+
+	// Add back the center "vector"
+	dst_x = (int)(dst_x + c_x);
+	dst_y = (int)(dst_y + c_y);
+
+	// Check if the resulting point is inside the boundary of the image, i.e
+	// 0->max_x, 0->max_y.
+	if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height)
 	{
-		for (int j = 0; j < width; j++)
-		{
-
-			// Subtract center coordinates, so that we rotate with respect to the
-			// center of the image.
-			float x = j - c_x;
-			float y = i - c_y;
-
-			// Rotation operation
-			float dst_x = cos(angle) * x - sin(angle) * y;
-			float dst_y = sin(angle) * x + cos(angle) * y;
-
-			// Add back the center "vector"
-			dst_x = (int)(dst_x + c_x);
-			dst_y = (int)(dst_y + c_y);
-
-			// Check if the resulting point is inside the boundary of the image, i.e
-			// 0->max_x, 0->max_y.
-			if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height)
-			{
-				// If so then assign value from original array to dst_array at idx
-				// location.
-				int idx = dst_y * width + dst_x;
-				dst_array[idx] = A[i * width + j];
-			}
-		}
+		// If so then assign value from original array to dst_array at idx
+		// location.
+		int idx = dst_y * width + dst_x;
+		dst_array[idx] = A[tid];
 	}
 }
 
 int main()
 {
-	const char *pathname = "../Images/rectangle.raw";
+	const char *pathname = "../Images/data_rectangle.raw";
 	int width = 300;
 	int height = 200;
 
 	const int n = width * height;
 	float *A = (float *)malloc(sizeof(float) * n);
 	float *R = (float *)malloc(sizeof(float) * n);
+
+	memset(R, 0, n * sizeof(float));
+	
 	float *d_a, *d_out;
 
 	// Open input image and populate input array A.
@@ -67,14 +67,18 @@ int main()
 	}
 
 	// Allocate memory on device.
-	cudaMalloc((void **)&d_a, sizeof(float) * n);
-	cudaMalloc((void **)&d_out, sizeof(float) * n);
+	cudaMalloc(&d_a, sizeof(float) * n);
+	cudaMalloc(&d_out, sizeof(float) * n);
 
 	// Copy Image array to device.
 	cudaMemcpy(d_a, A, sizeof(float) * n, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_out, R, sizeof(float) * n, cudaMemcpyHostToDevice);
 
-	// Call Kernel rotateScatter
-	rotateScatter<<<1, 1>>>(d_a, d_out, M_PI / 4, width, height);
+	int NUM_THREADS = 256;
+	int NUM_BLOCKS = (int)ceil(n/NUM_THREADS);
+
+	// // Call Kernel rotateScatter
+	rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
 
 	cudaMemcpy(R, d_out, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
@@ -88,8 +92,8 @@ int main()
 
 	cudaFree(d_a);
 	cudaFree(d_out);
-	fclose(fp);
-	fclose(raw_p);
+	// fclose(fp);
+	// fclose(raw_p);
 	free(A);
 	free(R);
 
