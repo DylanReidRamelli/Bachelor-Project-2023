@@ -6,13 +6,13 @@ from PIL import Image
 
 
 def write_data():
-    image_path_png = "../../../Images/rectangle.png"
+    image_path_png = "../../../Images/Roberts-Claude-Shannon-1.jpg"
     original_png_data = Image.open(image_path_png).convert('L')
     numpy_data = np.asarray(original_png_data)
     numpy_data = numpy_data.astype(np.float32)
-    numpy_data = np.reshape(numpy_data, (60000,))
+    numpy_data = np.reshape(numpy_data, (numpy_data.shape[0] * numpy_data.shape[1],))
     print(numpy_data)
-    numpy_data.tofile("../../../Images/data_rectangle.raw")
+    numpy_data.tofile("../../../Images/data_roberts.raw")
 
 
 def read_data(image_path):

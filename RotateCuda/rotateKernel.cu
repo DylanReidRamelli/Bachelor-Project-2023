@@ -74,11 +74,17 @@ __global__ void rotateGather(float *A, float *dst_array, const float angle,
 	}
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-	const char *pathname = "../Images/data_rectangle.raw";
+	const char *pathname = "../Images/data_roberts.raw";
 	int width = 300;
 	int height = 200;
+
+	if (argc == 3)
+	{
+		width = atoi(argv[1]);
+		height = atoi(argv[2]);
+	}
 
 	const int n = width * height;
 	float *A = (float *)malloc(sizeof(float) * n);
@@ -110,12 +116,12 @@ int main()
 	cudaMemcpy(d_a, A, sizeof(float) * n, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_out, R, sizeof(float) * n, cudaMemcpyHostToDevice);
 
-	int NUM_THREADS = 256;
+	int NUM_THREADS = 1024;
 	int NUM_BLOCKS = (int)ceil(n / NUM_THREADS);
 
 	// // Call Kernel rotateScatter
-	// rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
-	rotateGather<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
+	rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
+	// rotateGather<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
 
 	cudaMemcpy(R, d_out, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
