@@ -36,6 +36,7 @@ add_executable(rotate_noloss RotateSerial/c/drivers/rotate_noloss.c)
 target_link_libraries(rotate_noloss Bachelor)
 
 if(BACHELOR_ENABLE_CUDA)
+  find_package(CUDAToolkit)
   if(CUDA_FOUND)
     add_executable(rotate_loss_CUDA RotateCuda/rotateKernel.cu)
     target_link_libraries(rotate_loss_CUDA Bachelor)
