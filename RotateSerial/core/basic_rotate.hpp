@@ -104,26 +104,26 @@ std::vector<int> rotateGatherNoLoss(const std::vector<int> &A,
   int c_x = height / 2.0;
   int c_y = width / 2.0;
 
-  std::vector<int> ld = {0, 0};
-  std::vector<int> lu = {0, height};
-  std::vector<int> rd = {width, 0};
-  std::vector<int> ru = {width, height};
-  int i = 0;
+  // std::vector<int> ld{0, 0};
+  // std::vector<int> lu{0, height};
+  // std::vector<int> rd = {width, 0};
+  // std::vector<int> ru = {width, height};
+  // int i = 0;
 
-  while (i < 2) {
-    if (i == 0) {
-      ld[i] = ld[i] - c_x;
-      lu[i] = lu[i] - c_x;
-      rd[i] = rd[i] - c_x;
-      ru[i] = ru[i] - c_x;
-    } else {
-      ld[i] = ld[i] - c_y;
-      lu[i] = lu[i] - c_y;
-      rd[i] = rd[i] - c_y;
-      ru[i] = ru[i] - c_y;
-    }
-    i++;
-  }
+  // while (i < 2) {
+  //   if (i == 0) {
+  //     ld[i] = ld[i] - c_x;
+  //     lu[i] = lu[i] - c_x;
+  //     rd[i] = rd[i] - c_x;
+  //     ru[i] = ru[i] - c_x;
+  //   } else {
+  //     ld[i] = ld[i] - c_y;
+  //     lu[i] = lu[i] - c_y;
+  //     rd[i] = rd[i] - c_y;
+  //     ru[i] = ru[i] - c_y;
+  //   }
+  //   i++;
+  // }
 }
 
 #endif

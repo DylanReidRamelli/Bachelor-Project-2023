@@ -1,5 +1,4 @@
-#include "../core/basic_rotate.hpp"
-#include "../core/read-png.h"
+#include "basic_rotate.hpp"
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -21,10 +20,10 @@ void read_png_file(const std::vector<float> &output, const int width,
 
 int main(int argc, const char *argv[]) {
 
-  const std::string file_path = "../../images/rectangle.png";
-  std::vector<float> A;
-  int width = 300;
-  int height = 200;
+  // const std::string file_path = "../../images/rectangle.png";
+  // std::vector<float> A;
+  // int width = 300;
+  // int height = 200;
 
-  read_png_file(A, width, height, file_path);
+  // read_png_file(A, width, height, file_path);
 }

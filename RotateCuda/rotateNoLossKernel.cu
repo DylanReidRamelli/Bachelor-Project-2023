@@ -109,10 +109,6 @@ int main()
     int NUM_THREADS = 256;
     int NUM_BLOCKS = (int)ceil(n / NUM_THREADS);
 
-    // // Call Kernel rotateScatter
-    // rotateScatter<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
-    // rotateGatherNoLoss<<<NUM_BLOCKS, NUM_THREADS>>>(d_a, d_out, M_PI / 4, width, height);
-
     cudaMemcpy(R, d_out, sizeof(float) * n, cudaMemcpyDeviceToHost);
 
     // Open output file and write result array.
