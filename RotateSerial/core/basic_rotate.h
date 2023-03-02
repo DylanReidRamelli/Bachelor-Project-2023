@@ -36,7 +36,8 @@ void rotateCorners(int output[2], int width, int height, float angle) {
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
-  float corners[8] = {0, 0, 0, height, width, 0, width, height};
+  float corners[8] = {
+      0, 0, 0, (float)height, (float)width, 0, (float)width, (float)height};
 
   for (int j = 0; j < 8; j++) {
     if (j % 2 == 0) {
@@ -202,8 +203,8 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
         float y = i - c_y_out;
 
         // Rotation operation
-        float dst_x = cos(angle) * x + sin(angle) * y;
-        float dst_y = -sin(angle) * x + cos(angle) * y;
+        float dst_x = cos(angle) * x - sin(angle) * y;
+        float dst_y = sin(angle) * x + cos(angle) * y;
 
         // Add back the center "vector"
         dst_x = (int)(dst_x + c_x);
@@ -216,6 +217,7 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
           // location.
           int idx = dst_y * width + dst_x;
           dst_array[i * mSize[0] + j] = A[idx];
+          printf("A value: %f\n", A[idx]);
         }
       }
     }

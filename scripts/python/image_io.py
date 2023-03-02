@@ -6,13 +6,14 @@ from PIL import Image
 
 
 def write_data():
-    image_path_png = "../../../Images/Roberts-Claude-Shannon-1.jpg"
+    image_path_png = "../../Images/Roberts-Claude-Shannon-1.jpg"
     original_png_data = Image.open(image_path_png).convert('L')
     numpy_data = np.asarray(original_png_data)
     numpy_data = numpy_data.astype(np.float32)
     numpy_data = np.reshape(numpy_data, (numpy_data.shape[0] * numpy_data.shape[1],))
+    print(numpy_data.shape)
     print(numpy_data)
-    numpy_data.tofile("../../../Images/data_roberts.raw")
+    numpy_data.tofile("../../Images/data_roberts.raw")
 
 
 def read_data(image_path):
@@ -44,6 +45,8 @@ def read_data_no_loss(image_path, image_info):
     nx = int(line[0])
     ny = int(line[1])
     n = nx * ny
+
+    print(nx,ny)
 
     # Load the data from the file
     data = np.fromfile(image_path, dtype=np.float32)
