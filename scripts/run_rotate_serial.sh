@@ -1,7 +1,25 @@
 #! /bin/bash
 
-rm -rf ../RotateSerial/scatter/scatterRotate_image*
-rm -rf ../RotateSerial/scatter/gatherRotate_image*
 
-python3.9 ../RotateSerial/rotateSerial.py
+_build_all(){
+	cmake ..
+	make -j4 
+	./rotate_noloss
+	cd ../scripts/python/
+	python3.10 image_io.py ../../build/test_image_noloss.raw ../../build/image_info.raw
+}
+
+if [[ -d build ]]
+then
+	cd build
+	_build_all
+fi
+
+if [[ ! -d build ]]
+then
+	mkdir build
+	cd build
+	_build_all
+fi
+
 

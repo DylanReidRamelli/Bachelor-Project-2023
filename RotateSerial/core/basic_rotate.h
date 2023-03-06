@@ -168,7 +168,7 @@ void rotateGather(const float A[], float dst_array[], const float angle,
   }
 }
 
-void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
+void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
                         int width, int height, int mSize[2]) {
 
   int newSize[2] = {0, 0};
@@ -217,9 +217,10 @@ void rotateGatherNoLoss(const float A[], float *dst_array, const float angle,
           // location.
           int idx = dst_y * width + dst_x;
           dst_array[i * mSize[0] + j] = A[idx];
-          printf("A value: %f\n", A[idx]);
         }
       }
     }
+  } else {
+    printf("No realloc\n");
   }
 }

@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 
     // Rotate values of 1D input array and store in result.
     int newSize[2] = {0, 0};
-    rotateGatherNoLoss(A, result, M_PI / 4, width, height, newSize);
+    rotateGatherNoLoss(A, result, M_PI / 6, width, height, newSize);
 
     // for (int i = 0; i < newSize[0] * newSize[1]; i++) {
     //   printf("Value: %f", result[i]);
@@ -72,6 +72,7 @@ int main(int argc, char *argv[]) {
     fclose(raw_p);
   }
   // free(result);
+  // free(A);
   return 0;
 }
 
