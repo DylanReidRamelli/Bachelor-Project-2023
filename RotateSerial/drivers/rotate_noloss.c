@@ -24,31 +24,36 @@ int main(int argc, char *argv[]) {
   // Declare initial variables.
   const int n = width * height;
 
+  const float ANGLE = M_PI / 3;
+
   float *A = malloc(sizeof(float) * n);
   // float result[n];
-  float *result = malloc(n * sizeof(float));
+
+  // Open input image and populate input array A.
+  FILE *raw_p = fopen(pathname, "rb");
+  if (raw_p) {
+    fread(A, sizeof(float), n, raw_p);
+  } else {
+    printf("Image not found.\n");
+  }
+
+  // Modify input array A by normalizing values from 0->1.
+  for (int i = 0; i < n; ++i) {
+    A[i] = A[i] / 255.0;
+    // printf("%f\n", A[i]);
+  }
+
+  int newSize[2] = {0, 0};
+
+  // Rotate corners and get new dimentions of image.
+  rotateCorners(newSize, width, height, ANGLE);
+
+  float *result = malloc(newSize[0] * newSize[1] * sizeof(float));
   if (result) {
 
-    // Populate result array with 0's.
-    // memset(result, 0, n * sizeof(float));
-
-    // Open input image and populate input array A.
-    FILE *raw_p = fopen(pathname, "rb");
-    if (raw_p) {
-      fread(A, sizeof(float), n, raw_p);
-    } else {
-      printf("Image not found.\n");
-    }
-
-    // Modify input array A by normalizing values from 0->1.
-    for (int i = 0; i < n; ++i) {
-      A[i] = A[i] / 255.0;
-      // printf("%f\n", A[i]);
-    }
-
+    memset(result, 0, newSize[0] * newSize[1] * sizeof(float));
     // Rotate values of 1D input array and store in result.
-    int newSize[2] = {0, 0};
-    rotateGatherNoLoss(A, result, M_PI / 6, width, height, newSize);
+    rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
 
     // for (int i = 0; i < newSize[0] * newSize[1]; i++) {
     //   printf("Value: %f", result[i]);
@@ -71,8 +76,8 @@ int main(int argc, char *argv[]) {
     fclose(fpdata);
     fclose(raw_p);
   }
-  // free(result);
-  // free(A);
+  free(result);
+  free(A);
   return 0;
 }
 

@@ -10,7 +10,11 @@ __global__ void rotateScatter(float *A, float *dst_array, const float angle,
 	float c_x = width / 2.0;
 	float c_y = height / 2.0;
 
+
+	// Check if thread is in the range of the points. With width and height.
 	int tid = (blockIdx.x * blockDim.x) + threadIdx.x;
+
+	// Loop that check if each thread 
 
 	float x = int(tid % width);
 	float y = int(tid / height);
