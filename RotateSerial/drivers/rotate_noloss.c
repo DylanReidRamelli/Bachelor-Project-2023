@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
   // const char *pathname = "../../Images/data_rectangle.raw";
   int width = 1303;
   int height = 2000;
+  int iAngle = 45;
 
   if (argc == 3) {
     width = atoi(argv[1]);
@@ -21,10 +22,17 @@ int main(int argc, char *argv[]) {
     pathname = argv[3];
   }
 
+  if (argc == 5) {
+    width = atoi(argv[1]);
+    height = atoi(argv[2]);
+    pathname = argv[3];
+    iAngle = atoi(argv[4]);
+  }
+
   // Declare initial variables.
   const int n = width * height;
 
-  const float ANGLE = M_PI / 3;
+  const float ANGLE = iAngle * (M_PI / 180);
 
   float *A = malloc(sizeof(float) * n);
   // float result[n];
@@ -54,10 +62,6 @@ int main(int argc, char *argv[]) {
     memset(result, 0, newSize[0] * newSize[1] * sizeof(float));
     // Rotate values of 1D input array and store in result.
     rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
-
-    // for (int i = 0; i < newSize[0] * newSize[1]; i++) {
-    //   printf("Value: %f", result[i]);
-    // }
 
     FILE *fpdata = fopen("image_info.raw", "w");
     if (fpdata) {

@@ -1,3 +1,4 @@
 # General Notes
-Rotate corners before allocating array.
+- Rotate corners before allocating array. - DONE
+
 

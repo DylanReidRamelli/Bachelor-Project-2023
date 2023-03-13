@@ -80,6 +80,7 @@ __global__ void rotateGather(float *A, float *dst_array, const float angle,
 
 int main(int argc, char *argv[])
 {
+
 	const char *pathname = "../Images/data_roberts.raw";
 	int width = 300;
 	int height = 200;
