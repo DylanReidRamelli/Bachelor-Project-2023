@@ -29,7 +29,7 @@ float min(float input[], int size)
 }
 
 // 2D rotation.
-__global__ void rotation(float coordinate[2], int idx, float angle)
+void rotation(float coordinate[2], int idx, float angle)
 {
     float tmp_x = coordinate[idx];
     float tmp_y = coordinate[idx + 1];
@@ -38,7 +38,7 @@ __global__ void rotation(float coordinate[2], int idx, float angle)
 }
 
 // 2D corner rotation.
-__global__ void rotateCorners(int output[2], int width, int height, float angle)
+void rotateCorners(int output[2], int width, int height, float angle)
 {
 
     float c_x = width / 2.0;
@@ -101,9 +101,6 @@ __global__ void rotateCorners(int output[2], int width, int height, float angle)
 __global__ void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
                                    int width, int height, int newSize[2])
 {
-
-    // Rotate corners and get new dimentions of image.
-    rotateCorners(newSize, width, height, angle);
 
     float c_x = width / 2.0;
     float c_y = height / 2.0;

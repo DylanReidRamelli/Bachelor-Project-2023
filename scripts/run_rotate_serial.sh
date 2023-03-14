@@ -23,7 +23,7 @@ _build_all(){
 	done
 
 	cd output_images
-	rm out.mp4
+	rm output.mp4
 	# ffmpeg -framerate 2 -pattern_type glob -i '*.png' -c:v libx264 -pix_fmt yuv420p out.mp4
 	ffmpeg -start_number 0 -i image_%d.png -r 24 output.mp4
 }

@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     oDataInfo = argv[2];
     oDataPath = argv[3];
 
-    printf("ANGLE: %d, info: %s, output_path: %s", iAngle, oDataInfo,
+    printf("ANGLE: %d, info: %s, output_path: %s\n", iAngle, oDataInfo,
            oDataPath);
   }
 
