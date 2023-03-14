@@ -5,28 +5,32 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  const char *pathname = "../Images/data_roberts.raw";
+  const char *iDataPath = "../Images/data_roberts.raw";
   // const char *pathname = "../../Images/data_rectangle.raw";
   int width = 1303;
   int height = 2000;
-  int iAngle = 45;
+  int iAngle = -145;
+  char *oDataInfo;
+  char *oDataPath;
 
-  if (argc == 3) {
-    width = atoi(argv[1]);
-    height = atoi(argv[2]);
-  }
+  // if (argc == 3) {
+  //   width = atoi(argv[1]);
+  //   height = atoi(argv[2]);
+  // }
+
+  // if (argc == 4) {
+  //   width = atoi(argv[1]);
+  //   height = atoi(argv[2]);
+  //   iDataPath = argv[3];
+  // }
 
   if (argc == 4) {
-    width = atoi(argv[1]);
-    height = atoi(argv[2]);
-    pathname = argv[3];
-  }
+    iAngle = atoi(argv[1]);
+    oDataInfo = argv[2];
+    oDataPath = argv[3];
 
-  if (argc == 5) {
-    width = atoi(argv[1]);
-    height = atoi(argv[2]);
-    pathname = argv[3];
-    iAngle = atoi(argv[4]);
+    printf("ANGLE: %d, info: %s, output_path: %s", iAngle, oDataInfo,
+           oDataPath);
   }
 
   // Declare initial variables.
@@ -38,7 +42,7 @@ int main(int argc, char *argv[]) {
   // float result[n];
 
   // Open input image and populate input array A.
-  FILE *raw_p = fopen(pathname, "rb");
+  FILE *raw_p = fopen(iDataPath, "rb");
   if (raw_p) {
     fread(A, sizeof(float), n, raw_p);
   } else {
@@ -63,13 +67,13 @@ int main(int argc, char *argv[]) {
     // Rotate values of 1D input array and store in result.
     rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
 
-    FILE *fpdata = fopen("image_info.raw", "w");
+    FILE *fpdata = fopen(oDataInfo, "w");
     if (fpdata) {
       fprintf(fpdata, "%i,%i", newSize[0], newSize[1]);
     }
 
     // Open output file and write result array.
-    FILE *fp = fopen("test_image_noloss.raw", "wb");
+    FILE *fp = fopen(oDataPath, "wb");
     if (fp) {
       size_t r = fwrite(result, sizeof(result[0]), newSize[0] * newSize[1], fp);
       printf("wrote %zu elements out of %d requested\n", r,

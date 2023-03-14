@@ -64,10 +64,43 @@ def read_data_no_loss(image_path, image_info):
     plt.show()
 
 
+
+def read_data_no_loss(image_path, image_info, image_n):
+    f = open(image_info)
+    line = f.readlines()
+    line = line[0].split(',')
+    nx = int(line[0])
+    ny = int(line[1])
+    n = nx * ny
+
+    print(nx,ny)
+
+    # Load the data from the file
+    data = np.fromfile(image_path, dtype=np.float32)
+    data = np.reshape(data, (ny, nx))
+
+    print(data)
+
+
+    plt.title("Rotation")
+    plt.xlabel("X pixel scaling.")
+    plt.ylabel("Y pixel scaling.")
+    print("Image: "+ image_n)
+
+    # Visualize the data as an image
+    plt.imshow(data, cmap='gray')
+    # plt.show()
+    plt.savefig("output_images/image_" + image_n)
+
+
+
 if __name__ == "__main__":
     # write_data()
     # main()
     if len(sys.argv) == 3:
         read_data_no_loss(sys.argv[1], sys.argv[2])
+
+    elif len(sys.argv) == 4:
+        read_data_no_loss(sys.argv[1], sys.argv[2], sys.argv[3])
     else:
         read_data(sys.argv[1])
