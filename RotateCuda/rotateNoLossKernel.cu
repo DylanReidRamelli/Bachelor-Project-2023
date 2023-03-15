@@ -139,12 +139,36 @@ __global__ void rotateGatherNoLoss(float *A, float *dst_array, const float angle
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 
     const char *pathname = "../Images/data_roberts.raw";
     int width = 1303;
     int height = 2000;
+    int iAngle = -145;
+    char *oDataInfo;
+    char *oDataPath;
+
+    // if (argc == 3) {
+    //   width = atoi(argv[1]);
+    //   height = atoi(argv[2]);
+    // }
+
+    // if (argc == 4) {
+    //   width = atoi(argv[1]);
+    //   height = atoi(argv[2]);
+    //   iDataPath = argv[3];
+    // }
+
+    if (argc == 4)
+    {
+        iAngle = atoi(argv[1]);
+        oDataInfo = argv[2];
+        oDataPath = argv[3];
+
+        printf("ANGLE: %d, info: %s, output_path: %s\n", iAngle, oDataInfo,
+               oDataPath);
+    }
 
     const int n = width * height;
     float *A = (float *)malloc(sizeof(float) * n);
@@ -190,11 +214,19 @@ int main()
     cudaMemcpy(R, d_out, sizeof(float) * rSize, cudaMemcpyDeviceToHost);
 
     // Open output file and write result array.
-    FILE *fp = fopen("test_image.raw", "wb");
+    FILE *fpdata = fopen(oDataInfo, "w");
+    if (fpdata)
+    {
+        fprintf(fpdata, "%i,%i", newSize[0], newSize[1]);
+    }
+
+    // Open output file and write result array.
+    FILE *fp = fopen(oDataPath, "wb");
     if (fp)
     {
-        size_t r = fwrite(R, sizeof(R[0]), rSize, fp);
-        printf("wrote %zu elements out of %d requested\n", r, rSize);
+        size_t r = fwrite(R, sizeof(R[0]), newSize[0] * newSize[1], fp);
+        printf("wrote %zu elements out of %d requested\n", r,
+               newSize[0] * newSize[1]);
     }
 
     cudaFree(d_a);
