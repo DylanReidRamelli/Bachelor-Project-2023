@@ -4,7 +4,7 @@
 #include <string.h>
 
 // Find max value in array of float.
-float max(float input[], int size) {
+float max(const float input[], int size) {
   float max_value = input[0];
   for (int i = 0; i < size; i++) {
     if (input[i] > max_value)
@@ -14,7 +14,7 @@ float max(float input[], int size) {
 }
 
 // Find min value in array of float.
-float min(float input[], int size) {
+float min(const float input[], int size) {
   float min_value = input[0];
   for (int i = 0; i < size; i++) {
     if (input[i] < min_value)
@@ -198,11 +198,18 @@ void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
 
       // Check if the resulting point is inside the boundary of the
       // image,i.e 0->max_x, 0->max_y.
-      if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
-        // If so then assign value from original array to dst_array at idx
-        // location.
+      // if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
+      //   // If so then assign value from original array to dst_array at idx
+      //   // location.
+      //   int idx = dst_y * width + dst_x;
+      //   dst_array[i * newSize[0] + j] = A[idx];
+      // }
+
+      if (i < c_y_out + 200 && i > c_y_out) {
         int idx = dst_y * width + dst_x;
         dst_array[i * newSize[0] + j] = A[idx];
+      } else {
+        dst_array[i * newSize[0] + j] = 0;
       }
     }
   }

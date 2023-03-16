@@ -15,8 +15,9 @@ _build_all(){
 	done
 
 
-	cd ../scripts/python
-	rm output_images/.png*
+	cd ../scripts/python/output_images
+	rm *.png
+	cd ..
 	for (( i=1; i<=360; i++ ))
 	do
 		python3.10 image_io.py ../../build/images/test_image_noloss_${i}.raw ../../build/info/image_info_${i}.raw ${i}
