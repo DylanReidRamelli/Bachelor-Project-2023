@@ -5,10 +5,11 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  const char *iDataPath = "../Images/data_roberts.raw";
+  const char *iDataPath = "../Images/circular_symmetric.raw";
+  // const char *iDataPath = "../Images/data_roberts.raw";
   // const char *pathname = "../../Images/data_rectangle.raw";
-  int width = 1303;
-  int height = 2000;
+  int width = 300;
+  int height = 300;
   int iAngle = -145;
   char *oDataInfo;
   char *oDataPath;
@@ -65,7 +66,8 @@ int main(int argc, char *argv[]) {
 
     memset(result, 0, newSize[0] * newSize[1] * sizeof(float));
     // Rotate values of 1D input array and store in result.
-    rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
+    // rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
+    three_pass_rotation(A, result, ANGLE, width, height, newSize);
 
     FILE *fpdata = fopen(oDataInfo, "w");
     if (fpdata) {

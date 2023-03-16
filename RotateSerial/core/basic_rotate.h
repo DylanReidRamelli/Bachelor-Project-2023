@@ -168,6 +168,48 @@ void rotateGather(const float A[], float dst_array[], const float angle,
   }
 }
 
+void three_pass_rotation(float *A, float *dst_array, const float angle,
+                         int width, int height, int newSize[2]) {
+  rotateCorners(newSize, width, height, angle);
+
+  float c_x = width / 2.0;
+  float c_y = height / 2.0;
+  float c_x_out = newSize[0] / 2.0;
+  float c_y_out = newSize[1] / 2.0;
+
+  // Iterating horizontally through the image.
+  for (int i = 0; i < newSize[1]; i++) {
+    for (int j = 0; j < newSize[0]; j++) {
+
+      // Subtract center coordinates, so that we rotate with respect to the
+      // center of the image.
+      float x = j - c_x_out;
+      float y = i - c_y_out;
+
+      // Rotation operations divided in three matrices.
+      float dst_x = x - y * tan(angle / 2);
+      float dst_y = y;
+
+      dst_x = dst_x;
+      dst_y = dst_x * sin(angle) + dst_y;
+
+      dst_x = dst_x - tan(angle / 2) * dst_y;
+      dst_y = dst_y;
+
+      // Add back the center "vector"
+      dst_x = (int)(dst_x + c_x);
+      dst_y = (int)(dst_y + c_y);
+
+      if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
+        // If so then assign value from original array to dst_array at idx
+        // location.
+        int idx = dst_y * width + dst_x;
+        dst_array[i * newSize[0] + j] = A[idx];
+      }
+    }
+  }
+}
+
 void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
                         int width, int height, int newSize[2]) {
 
@@ -199,7 +241,8 @@ void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
       // Check if the resulting point is inside the boundary of the
       // image,i.e 0->max_x, 0->max_y.
       // if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
-      //   // If so then assign value from original array to dst_array at idx
+      //   // If so then assign value from original array to dst_array at
+      //   idx
       //   // location.
       //   int idx = dst_y * width + dst_x;
       //   dst_array[i * newSize[0] + j] = A[idx];
