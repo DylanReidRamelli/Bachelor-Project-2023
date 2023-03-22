@@ -66,8 +66,8 @@ int main(int argc, char *argv[]) {
 
     memset(result, 0, newSize[0] * newSize[1] * sizeof(float));
     // Rotate values of 1D input array and store in result.
-    // rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
-    three_pass_rotation(A, result, ANGLE, width, height, newSize);
+    rotateGatherNoLoss(A, result, ANGLE, width, height, newSize);
+    // three_pass_rotation(A, result, ANGLE, width, height, newSize);
 
     FILE *fpdata = fopen(oDataInfo, "w");
     if (fpdata) {

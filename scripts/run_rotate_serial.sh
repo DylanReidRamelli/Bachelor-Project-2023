@@ -1,4 +1,5 @@
 #! /bin/bash
+angle = 180
 
 
 _build_all(){
@@ -18,15 +19,14 @@ _build_all(){
 	cd ../scripts/python/output_images
 	rm *.png
 	cd ..
-	for (( i=1; i<=180; i++ ))
+	for (( i=0; i<=180; i++ ))
 	do
 		python3.10 image_io.py ../../build/images/test_image_noloss_${i}.raw ../../build/info/image_info_${i}.raw ${i}
 	done
 
 	cd output_images
 	rm output.mp4
-	# ffmpeg -framerate 2 -pattern_type glob -i '*.png' -c:v libx264 -pix_fmt yuv420p out.mp4
-	ffmpeg -start_number 0 -i image_%d.png -r 24 output.mp4
+	ffmpeg -i image_%d.png -c:v h264 -crf 20 -pix_fmt yuv420p output.mp4
 }
 
 if [[ -d build ]]
@@ -41,5 +41,3 @@ then
 	cd build
 	_build_all
 fi
-
-

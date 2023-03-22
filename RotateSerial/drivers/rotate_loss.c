@@ -5,20 +5,33 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  const char *pathname = "../Images/data_roberts.raw";
-  // const char *pathname = "../../../Images/data_rectangle.raw";
-  int width = 1303;
-  int height = 2000;
+  const char *pathname = "../Images/circular_symmetric.raw";
+  // const char *iDataPath = "../Images/data_roberts.raw";
+  // const char *pathname = "../../Images/data_rectangle.raw";
+  int width = 300;
+  int height = 300;
+  int iAngle = -145;
+  char *oDataInfo;
+  char *oDataPath;
 
-  if (argc == 3) {
-    width = atoi(argv[1]);
-    height = atoi(argv[2]);
-  }
+  // if (argc == 3) {
+  //   width = atoi(argv[1]);
+  //   height = atoi(argv[2]);
+  // }
+
+  // if (argc == 4) {
+  //   width = atoi(argv[1]);
+  //   height = atoi(argv[2]);
+  //   iDataPath = argv[3];
+  // }
 
   if (argc == 4) {
-    width = atoi(argv[1]);
-    height = atoi(argv[2]);
-    pathname = argv[3];
+    iAngle = atoi(argv[1]);
+    oDataInfo = argv[2];
+    oDataPath = argv[3];
+
+    printf("ANGLE: %d, info: %s, output_path: %s\n", iAngle, oDataInfo,
+           oDataPath);
   }
 
   // Declare initial variables.
@@ -44,7 +57,12 @@ int main(int argc, char *argv[]) {
 
   // Rotate values of 1D input array and store in result.
   // rotateScatter(A, result, M_PI / 4, width, height);
-  rotateGather(A, result, M_PI / 4, width, height);
+  rotateGather(A, result, iAngle, width, height);
+
+  FILE *fpdata = fopen(oDataInfo, "w");
+  if (fpdata) {
+    fprintf(fpdata, "%i,%i", width, height);
+  }
 
   // Open output file and write result array.
   FILE *fp = fopen("test_image.raw", "wb");

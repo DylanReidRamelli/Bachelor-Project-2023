@@ -66,21 +66,44 @@ def read_data_no_loss(image_path, image_info):
 
 
 def read_data_no_loss(image_path, image_info, image_n):
+
+    padding = 50
+
+    original_image_info = image_info.replace(image_n, '0')
+    original_image_f = open(original_image_info)
+    original_line = original_image_f.readlines()
+    original_line = original_line[0].split(',')
+    original_nx = int(original_line[0])
+    original_ny = int(original_line[1])
+
+
+    max_x = original_nx + padding
+    max_y = original_ny + padding
+
+
     f = open(image_info)
     line = f.readlines()
     line = line[0].split(',')
     nx = int(line[0])
     ny = int(line[1])
+
+    inst_padding_x = max_x - nx
+    inst_padding_y = max_y - ny
+
     n = nx * ny
 
-    print(nx,ny)
+    # print(max_x,max_y)
+    # print(inst_padding_x,inst_padding_y)
+    # print(nx,ny)
 
     # Load the data from the file
     data = np.fromfile(image_path, dtype=np.float32)
     data = np.reshape(data, (ny, nx))
 
-    print(data)
+    data = np.pad(data,pad_width=padding, mode='constant')
 
+    # print(data)
+    # print(data.shape)
 
     plt.title("Rotation")
     plt.xlabel("X pixel scaling.")
@@ -90,13 +113,16 @@ def read_data_no_loss(image_path, image_info, image_n):
     # Visualize the data as an image
     plt.imshow(data, cmap='gray')
     # plt.show()
-    plt.savefig("output_images/image_" + image_n, dpi=300)
+    plt.savefig("output_images/image_" + image_n)
 
 
 
 if __name__ == "__main__":
     # write_data()
-    # # main()
+    # # # main()
+
+
+
     if len(sys.argv) == 3:
         read_data_no_loss(sys.argv[1], sys.argv[2])
 

@@ -1,3 +1,4 @@
+#include "interpolate.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -170,7 +171,7 @@ void rotateGather(const float A[], float dst_array[], const float angle,
 
 void three_pass_rotation(float *A, float *dst_array, const float angle,
                          int width, int height, int newSize[2]) {
-  rotateCorners(newSize, width, height, angle);
+  // rotateCorners(newSize, width, height, angle);
 
   float c_x = width / 2.0;
   float c_y = height / 2.0;
@@ -235,25 +236,25 @@ void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
       float dst_y = sin(angle) * x + cos(angle) * y;
 
       // Add back the center "vector"
-      dst_x = (int)(dst_x + c_x);
-      dst_y = (int)(dst_y + c_y);
+      dst_x = (int)round(dst_x + c_x);
+      dst_y = (int)round(dst_y + c_y);
 
       // Check if the resulting point is inside the boundary of the
       // image,i.e 0->max_x, 0->max_y.
-      // if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
-      //   // If so then assign value from original array to dst_array at
-      //   idx
-      //   // location.
-      //   int idx = dst_y * width + dst_x;
-      //   dst_array[i * newSize[0] + j] = A[idx];
-      // }
-
-      if (i < c_y_out + 200 && i > c_y_out) {
+      if (dst_x >= 0 && dst_x < width && dst_y >= 0 && dst_y < height) {
+        // If so then assign value from original array to dst_array at
+        // idx
+        // location.
         int idx = dst_y * width + dst_x;
         dst_array[i * newSize[0] + j] = A[idx];
-      } else {
-        dst_array[i * newSize[0] + j] = 0;
       }
+
+      // if (i < c_y_out + 200 && i > c_y_out) {
+      //   int idx = dst_y * width + dst_x;
+      //   dst_array[i * newSize[0] + j] = A[idx];
+      // } else {
+      //   dst_array[i * newSize[0] + j] = 0;
+      // }
     }
   }
 }
