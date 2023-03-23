@@ -5,11 +5,11 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  const char *iDataPath = "../Images/circular_symmetric.raw";
+  const char *iDataPath = "../Images/wrapped_sinusoid.raw";
   // const char *iDataPath = "../Images/data_roberts.raw";
   // const char *pathname = "../../Images/data_rectangle.raw";
-  int width = 300;
-  int height = 300;
+  int width = 512;
+  int height = 512;
   int iAngle = -145;
   char *oDataInfo;
   char *oDataPath;

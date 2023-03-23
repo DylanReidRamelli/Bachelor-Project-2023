@@ -10,7 +10,7 @@ _build_all(){
 	# python3.10 image_io.py ../../build/test_image_noloss.raw ../../build/image_info.raw
 	rm info/image_info*
 	rm images/test_image_noloss_*
-	for (( i=0; i<=180; i++ ))
+	for (( i=0; i<=360; i++ ))
 	do
 		./rotate_noloss ${i} info/image_info_${i}.raw images/test_image_noloss_${i}.raw 
 	done
@@ -19,7 +19,7 @@ _build_all(){
 	cd ../scripts/python/output_images
 	rm *.png
 	cd ..
-	for (( i=0; i<=180; i++ ))
+	for (( i=0; i<=360; i++ ))
 	do
 		python3.10 image_io.py ../../build/images/test_image_noloss_${i}.raw ../../build/info/image_info_${i}.raw ${i}
 	done

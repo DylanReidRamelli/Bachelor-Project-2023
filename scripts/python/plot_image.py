@@ -3,21 +3,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
+# Define image dimensions
+width = 512
+height = 512
+
 A = 1.0
 B = 1.0
 C = 0.5
-n = 50
+n = 10
 
-# Define image dimensions
-width = 1000
-height = 1000
 
 def alpha_0(r):
-    return 2 * np.pi * np.sin(C * r)
+    return (2 * np.pi * np.sin(C * r)) - np.pi
 
 # Define function to be plotted
 def g(alpha, r):
-    return A * np.exp(-(r * alpha - alpha_0(r)) / r) * np.cos(B * r**(3/2)) * r
+    return A * np.exp(-((alpha - alpha_0(r))**2) / r) * np.cos(B * (r**(3/2)))
 
 def generate_graph():
 	r = np.linspace(1,360,num=360, dtype=int)
@@ -25,6 +26,9 @@ def generate_graph():
 	z = np.zeros_like(alpha)
 	for i in range(n):
 	    z += g(alpha, r * (i+1))
+
+	plt.xlabel("Angle in radians.")
+	plt.ylabel("g(alpha,radius)")
 	plt.plot(alpha,z)
 	plt.savefig("../../Images/graph_sinusoid.png")
 
@@ -33,13 +37,13 @@ def generate_graph():
 def generate_image():
 
 	# Generate image data
-	x, y = np.meshgrid(np.linspace(-1, 1, width), np.linspace(-1, 1, height))
+	x, y = np.meshgrid(np.linspace(-np.pi, np.pi, width), np.linspace(-np.pi, np.pi, height))
 	r = np.sqrt(x**2 + y**2)
 	theta = np.angle(x + y*1j)
 	z = np.zeros_like(r)
 
-	for i in range(n):
-	    z += g(theta, r * (i + 1))
+	for i in range(1,n):
+	    z += g(theta, r * i )
 
 	# # Normalize and convert to grayscale
 	z = (z - np.min(z)) / (np.max(z) - np.min(z))
