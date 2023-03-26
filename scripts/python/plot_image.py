@@ -14,11 +14,12 @@ n = 10
 
 
 def alpha_0(r):
-    return (2 * np.pi * np.sin(C * r)) - np.pi
+    return (2*np.pi * np.sin(C * r))
 
 # Define function to be plotted
 def g(alpha, r):
-    return A * np.exp(-((alpha - alpha_0(r))**2) / r) * np.cos(B * (r**(3/2)))
+    return A * np.exp(-np.mod(alpha - alpha_0(r), 2*np.pi)**2 / r) * np.cos(B * r**(3/2))
+    # return A * np.exp(-(r * np.mod(alpha - alpha_0(r), 2*np.pi) - alpha_0(r)) / r) * np.cos(B * r**(3/2)) * r
 
 def generate_graph():
 	r = np.linspace(1,360,num=360, dtype=int)
@@ -39,7 +40,10 @@ def generate_image():
 	# Generate image data
 	x, y = np.meshgrid(np.linspace(-np.pi, np.pi, width), np.linspace(-np.pi, np.pi, height))
 	r = np.sqrt(x**2 + y**2)
-	theta = np.angle(x + y*1j)
+	# theta = np.angle(x + y*1j)
+	theta = np.arctan2(y, x)
+
+	# print(theta)
 	z = np.zeros_like(r)
 
 	for i in range(1,n):

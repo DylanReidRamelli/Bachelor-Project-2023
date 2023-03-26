@@ -79,24 +79,20 @@ def read_data_no_loss(image_path, image_info, image_n):
     max_nx = int(max_line[0])
     max_ny = int(max_line[1])
 
-
-    # max_x = original_nx + padding
-    # max_y = original_ny + padding
-
-
     f = open(image_info)
     line = f.readlines()
     line = line[0].split(',')
     nx = int(line[0])
     ny = int(line[1])
 
-    padding = int((max_nx - nx)/2) 
+    padding = int((max_nx - nx)/2 )
+    # print(padding)
 
 
     # inst_padding_x = max_x - nx
     # inst_padding_y = max_y - ny
 
-    n = nx * ny
+    # n = nx * ny
 
     # print(max_x,max_y)
     # print(inst_padding_x,inst_padding_y)
@@ -124,14 +120,14 @@ def read_data_no_loss(image_path, image_info, image_n):
 
 
 if __name__ == "__main__":
-    # write_data()
+    write_data()
     # # # main()
 
 
-    if len(sys.argv) == 3:
-        read_data_no_loss(sys.argv[1], sys.argv[2])
+    # if len(sys.argv) == 3:
+    #     read_data_no_loss(sys.argv[1], sys.argv[2])
 
-    elif len(sys.argv) == 4:
-        read_data_no_loss(sys.argv[1], sys.argv[2], sys.argv[3])
-    else:
-        read_data(sys.argv[1])
+    # elif len(sys.argv) == 4:
+    #     read_data_no_loss(sys.argv[1], sys.argv[2], sys.argv[3])
+    # else:
+    #     read_data(sys.argv[1])
