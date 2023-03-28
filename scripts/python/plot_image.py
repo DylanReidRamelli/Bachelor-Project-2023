@@ -10,7 +10,7 @@ height = 512
 A = 1.0
 B = 1.0
 C = 0.5
-n = 10
+n = 2
 
 
 def alpha_0(r):
@@ -21,16 +21,28 @@ def g(alpha, r):
     return A * np.exp(-np.mod(alpha - alpha_0(r), 2*np.pi)**2 / r) * np.cos(B * r**(3/2))
     # return A * np.exp(-(r * np.mod(alpha - alpha_0(r), 2*np.pi) - alpha_0(r)) / r) * np.cos(B * r**(3/2)) * r
 
+
+# plot 1-d 
+# search 
 def generate_graph():
-	r = np.linspace(1,360,num=360, dtype=int)
+
+	n_radius = 2
+
+	r = np.linspace(1,n_radius,num=n_radius, dtype=int)
 	alpha = np.radians(np.linspace(1,360,num=360, dtype=int))
-	z = np.zeros_like(alpha)
-	for i in range(n):
-	    z += g(alpha, r * (i+1))
+
+	print(alpha)
 
 	plt.xlabel("Angle in radians.")
 	plt.ylabel("g(alpha,radius)")
-	plt.plot(alpha,z)
+
+
+	for j in range(1,n_radius):
+		z = np.zeros_like(alpha)
+		for i in range(0,len(alpha)):
+			z[i]= g(alpha[i], j)
+		plt.plot(alpha,z)
+
 	plt.savefig("../../Images/graph_sinusoid.png")
 
 
