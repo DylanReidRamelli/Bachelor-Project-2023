@@ -142,9 +142,9 @@ __global__ void rotateGatherNoLoss(float *A, float *dst_array, const float angle
 int main(int argc, char *argv[])
 {
 
-    const char *pathname = "../Images/data_roberts.raw";
-    int width = 1303;
-    int height = 2000;
+    const char *pathname = "../Images/wrapped_sinusoid.raw";
+    int width = 512;
+    int height = 512;
     int iAngle = -145;
     char *oDataInfo;
     char *oDataPath;
@@ -213,6 +213,7 @@ int main(int argc, char *argv[])
 
     cudaMemcpy(R, d_out, sizeof(float) * rSize, cudaMemcpyDeviceToHost);
 
+
     // Open output file and write result array.
     FILE *fpdata = fopen(oDataInfo, "w");
     if (fpdata)
@@ -231,8 +232,8 @@ int main(int argc, char *argv[])
 
     cudaFree(d_a);
     cudaFree(d_out);
-    // fclose(fp);
-    // fclose(raw_p);
+    fclose(fp);
+    fclose(raw_p);
     free(A);
     free(R);
 

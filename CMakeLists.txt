@@ -9,16 +9,6 @@ project(
 include(cmake/BachelorOptions.cmake)
 include(cmake/BachelorFunctions.cmake)
 
-if(BACHELOR_ENABLE_CUDA)
-  # enable_language(CUDA)
-  find_package(CUDAToolkit)
-  if(CUDA_FOUND)
-    add_executable(rotate_loss_CUDA RotateCuda/rotateKernel.cu)
-    target_link_libraries(rotate_loss_CUDA Bachelor)
-  else()
-    message(STATUS "NO CUDA COMPILER FOUND!")
-  endif()
-endif()
 
 # Add CUDA option.
 
@@ -54,3 +44,18 @@ target_link_libraries(rotate_loss Bachelor)
 
 add_executable(rotate_noloss RotateSerial/drivers/rotate_noloss.c)
 target_link_libraries(rotate_noloss Bachelor)
+
+
+if(BACHELOR_ENABLE_CUDA)
+  # enable_language(CUDA)
+  find_package(CUDAToolkit)
+  enable_language(CUDA)
+  # if(CUDA_FOUND)
+    add_executable(rotate_loss_CUDA RotateCuda/rotateKernel.cu)
+    target_link_libraries(rotate_loss_CUDA Bachelor)
+    add_executable(rotate_noloss_CUDA RotateCuda/rotateNoLossKernel.cu)
+    target_link_libraries(rotate_noloss_CUDA Bachelor)
+  # else()
+    # message(STATUS "NO CUDA COMPILER FOUND!")
+  # endif()
+endif()
