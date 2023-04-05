@@ -120,14 +120,14 @@ def read_data_no_loss(image_path, image_info, image_n):
 
 
 if __name__ == "__main__":
-    write_data()
+    # write_data()
     # # # main()
 
 
-    # if len(sys.argv) == 3:
-    #     read_data_no_loss(sys.argv[1], sys.argv[2])
+    if len(sys.argv) == 3:
+        read_data_no_loss(sys.argv[1], sys.argv[2])
 
-    # elif len(sys.argv) == 4:
-    #     read_data_no_loss(sys.argv[1], sys.argv[2], sys.argv[3])
-    # else:
-    #     read_data(sys.argv[1])
+    elif len(sys.argv) == 4:
+        read_data_no_loss(sys.argv[1], sys.argv[2], sys.argv[3])
+    else:
+        read_data(sys.argv[1])
