@@ -5,13 +5,13 @@ from PIL import Image
 import math
 
 # Define image dimensions
-width = 512
-height = 512
+width = 256
+height = 256
 
 A = 1.0
 B = 1.0
 C = 0.5
-n = 2
+n = 5
 
 
 def alpha_0(r):
@@ -61,7 +61,8 @@ def generate_image():
 	# print(n_size)
 	# print(r)
 
-	# z += g(theta, r * i)
+	for i in range(1, n+1):
+		z += g(theta, r * i)
 
 
 	# z += g(theta, 1)
@@ -73,7 +74,6 @@ def generate_image():
 
 
 	# # Normalize and convert to grayscale
-
 	z = (z - np.min(z)) / (np.max(z) - np.min(z))
 	z = (255 * z).astype(np.uint8)
 

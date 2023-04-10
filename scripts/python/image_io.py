@@ -17,8 +17,8 @@ def write_data():
 
 
 def read_data(image_path):
-    nx = 1303
-    ny = 2000
+    nx = 256
+    ny = 256
 
     # Load the data from the file
     data = np.fromfile(image_path, dtype=np.float32)
@@ -35,6 +35,7 @@ def read_data(image_path):
     # Visualize the data as an image
     plt.imshow(data, cmap='gray')
     plt.show()
+    plt.savefig("gather_loss.png")
 
 
 
