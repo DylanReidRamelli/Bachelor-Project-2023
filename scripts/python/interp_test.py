@@ -1,181 +1,49 @@
-# # # import numpy as np
-# # # import matplotlib.pyplot as plt
-
-
-# # # def cubic_spline_model(x):
-# # #     if np.abs(x) < 1 and np.abs(x) >= 0:
-# # #         return 2/3 - np.abs(x) ^ 2 + (np.abs(x) ^ 3)/2
-# # #     elif np.abs(x) < 2 and np.abs(x) >= 1:
-# # #         return (2 - np.abs(x) ^ 3)/6
-# # #     else:
-# # #         return 0
-
-
-# # # def f(x):
-# # #     if x <= 4 and x >= 3:
-# # #         return 1
-# # #     else:
-# # #         return 0
-
-
-# # # def run_example():
-# # #     max = 6
-# # #     o_immagine = np.linspace(0, max, 1000)
-
-# # #     for i in range(0, len(o_immagine)):
-# # #         o_immagine[i] = f(o_immagine[i])
-
-# # #     print(o_immagine)
-
-# # #     plt.plot(np.linspace(0, 6, 1000), o_immagine)
-
-# # #     interp_domain = np.linspace(0, 6, 1000)
-# # #     y = piecewise_linear_model(interp_domain)
-
-# # #     plt.plot(interp_domain, y, label='Interpolation points')
-# # #     plt.show()
-
-
-# # # def main():
-# # #     run_example()
-
-
-# # # if __name__ == '__main__':
-# # #     main()
-# # import numpy as np
-# # import matplotlib.pyplot as plt
-
-
-# # def linear_bspline(x):
-# #     if np.abs(x) < 1.0:
-# #         return 1.0 - np.abs(x)
-# #     else:
-# #         return 0.0
-
-
-# # def linear_spline_model(x):
-# #     if np.abs(x) < 2.0:
-# #         return linear_bspline(x + 1.0)
-# #     else:
-# #         return 0.0
-
-
-# # def f(x):
-# #     if x <= 4 and x >= 3:
-# #         return 1
-# #     else:
-# #         return 0
-
-
-# # def run_example():
-# #     max = 6
-# #     o_immagine = np.linspace(0, max, 1000)
-
-# #     for i in range(0, len(o_immagine)):
-# #         o_immagine[i] = f(o_immagine[i])
-
-# #     plt.plot(np.linspace(0, 6, 1000), o_immagine, label='Original Function')
-
-# #     interp_domain = np.linspace(0, 6, 1000)
-# #     y = np.zeros_like(interp_domain)
-# #     for i in range(len(interp_domain)):
-# #         y[i] = f(interp_domain[i])
-
-# #     print(y)
-# #     for i in range(len(interp_domain)):
-# #         y[i] = linear_spline_model(i)
-
-# #     print(y)
-
-# #     plt.plot(interp_domain, y, label='Linear Spline')
-# #     plt.legend()
-# #     plt.show()
-
-
-# # def main():
-# #     run_example()
-
-
-# # if __name__ == '__main__':
-# #     main()
-# import numpy as np
-# import matplotlib.pyplot as plt
-
-
-# def linear_spline_model(x):
-#     if x < 1:
-#         return 1 - x
-#     elif x < 2:
-#         return x - 1
-#     else:
-#         return 0
-
-
-# def f(x):
-#     return np.logical_and(x >= 3, x <= 4).astype(int)
-
-
-# def run_example():
-#     max = 6
-#     o_immagine = np.linspace(0, max, 1000)
-
-#     for i in range(0, len(o_immagine)):
-#         o_immagine[i] = f(o_immagine[i])
-
-#     # plt.plot(np.linspace(0, 6, 1000), o_immagine)
-
-#     interp_domain = np.linspace(0, 6, 1000)
-#     y = f(interp_domain)
-#     print(y)
-#     for i in range(len(y)):
-#         y[i] = linear_spline_model(y[i])
-
-#     plt.plot(interp_domain, y, label='Linear Spline')
-#     plt.legend()
-#     plt.show()
-
-
-# def main():
-#     run_example()
-
-
-# if __name__ == '__main__':
-#     main()
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def b(x):
-    if abs(x) < 1:
-        return 1 - abs(x)
+def shift_function(f, delta):
+    def g(x):
+        x_shifted = x - delta
+        if x_shifted >= 0 and x_shifted <= 6:
+            y1 = f(np.floor(x_shifted))
+            y2 = f(np.ceil(x_shifted))
+            return interpolate(x_shifted, np.floor(x_shifted), y1, np.ceil(x_shifted), y2)
+        else:
+            return 0
+    return g
+
+
+def f(x):
+    if x >= 3 and x <= 4:
+        return 1
     else:
         return 0
 
 
-def f(x):
-    return np.sin(x)
-    # if x >= 3 and x <= 4:
-    #     return 1
-    # else:
-    #     return 0
+def interpolate(x, x1, y1, x2, y2):
+    # Compute the slope of the line connecting the two data points
+    m = (y2 - y1) / (x2 - x1)
+    # Compute the y-intercept of the line
+    b = y1 - m * x1
+    # Evaluate the line at the given value of x
+    return m * x + b
 
 
-# Define b(x) and f(x) as before
-# Create a list of x values with 1000 samples between 0 and 6
-x_values = np.linspace(0, 6, 1000)
+# Define the amount by which we want to shift the function
+delta = 1
 
-y_values = []
-for x in x_values:
-    # if x >= 3 and x <= 4:
-    #     y_values.append(1)
-    # else:
-    y = 0
-    for i in range(-1, 2):
-        y += f(x + i) * b(i - x)
-    y_values.append(y)
+# Define the points at which we will evaluate the original and shifted functions
+x_data = np.linspace(0, 6, 100)
+x_interp = np.linspace(0, 6, 1000)
 
+# Compute the original function and the shifted function using linear interpolation
+y_data = [f(x) for x in x_data]
+g = shift_function(f, delta)
+y_interp = [g(x) for x in x_interp]
 
-plt.plot(x_values, y_values, label='Interpolated function')
-plt.plot(x_values, [f(x) for x in x_values], label='Original function')
+# Plot the original function and the shifted function
+plt.plot(x_interp, y_interp, label='Shifted function')
+plt.plot(x_data, y_data, '.', label='Original function')
 plt.legend()
 plt.show()
