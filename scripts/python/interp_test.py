@@ -1,49 +1,50 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
-
-def shift_function(f, delta):
-    def g(x):
-        x_shifted = x - delta
-        if x_shifted >= 0 and x_shifted <= 6:
-            y1 = f(np.floor(x_shifted))
-            y2 = f(np.ceil(x_shifted))
-            return interpolate(x_shifted, np.floor(x_shifted), y1, np.ceil(x_shifted), y2)
-        else:
-            return 0
-    return g
+import numpy as np
 
 
 def f(x):
-    if x >= 3 and x <= 4:
-        return 1
-    else:
-        return 0
+    g = np.zeros_like(x)
+    for i in range(0, len(x)):
+        if x[i] >= 2 and x[i] <= 4:
+            g[i] = 1
+        else:
+            g[i] = 0
+
+    return g
 
 
-def interpolate(x, x1, y1, x2, y2):
-    # Compute the slope of the line connecting the two data points
-    m = (y2 - y1) / (x2 - x1)
-    # Compute the y-intercept of the line
-    b = y1 - m * x1
-    # Evaluate the line at the given value of x
-    return m * x + b
+def interp_shift(f, delta):
+
+    r = np.zeros_like(f)
+    for x in range(0, len(r)):
+        for k in range(0, len(r)):
+            if x != k and abs(x - k) <= 1:
+                print("x", x)
+                slope = (f[k] - f[x]) / (k - x)
+                y = f[x] + (delta) * slope
+                r[x] = y
+
+    return r
 
 
-# Define the amount by which we want to shift the function
-delta = 1
+n_original_sample = 11
 
-# Define the points at which we will evaluate the original and shifted functions
-x_data = np.linspace(0, 6, 100)
-x_interp = np.linspace(0, 6, 1000)
+x = np.linspace(0, 10, num=n_original_sample)
+g = f(x)
 
-# Compute the original function and the shifted function using linear interpolation
-y_data = [f(x) for x in x_data]
-g = shift_function(f, delta)
-y_interp = [g(x) for x in x_interp]
+plt.plot(x, g, '-', label="Original function", marker='o')
 
-# Plot the original function and the shifted function
-plt.plot(x_interp, y_interp, label='Shifted function')
-plt.plot(x_data, y_data, '.', label='Original function')
+# shift
+delta = 4
+n_samples_mult = 1
+
+result = interp_shift(g, delta)
+
+plt.plot(x, result, label="Interpolated function.")
+
+plt.annotate("Delta: " + str(delta), xy=(9, 0.5))
+plt.annotate("N_Samples_Interpolation: " + str(len(x)), xy=(9, 0.4))
+plt.annotate("N_Samples_Original: " +
+             str(n_original_sample), xy=(9, 0.3))
 plt.legend()
 plt.show()
