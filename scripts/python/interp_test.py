@@ -17,6 +17,7 @@ def f(A):
     return Y
 
 
+# Same thing as above but for just one value x.
 def f_s(x):
     if x >= 3 and x <= 4:
         return 1
@@ -90,13 +91,11 @@ def cubic_spline_model(x,k, delta):
 
 
 
-
-
 def test_shift_function():
     domain_size = 10
 
     # Variable for controlling how manu subsamples we want to create
-    refined = 10
+    refined = 1
 
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
@@ -105,15 +104,16 @@ def test_shift_function():
     o_x = np.linspace(0,domain_size, sample_size)
     o_y = f(o_x)
 
-    plt.plot(o_x,o_y)
+
+    plt.plot(o_x,o_y, marker= 'o', label= "Original function")
 
 
 
     #############################################################
-    delta = 3
+    delta = 0.5
 
     # Variable for controlling how manu subsamples we want to create
-    refined = 10
+    refined = 1
 
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
@@ -128,13 +128,20 @@ def test_shift_function():
     for x in range(0,len(s_x)):
         x_1 = np.floor(s_x[x])
         x_2 = np.ceil(s_x[x])
-        y_1 = f_s(x_1)
-        y_2 = f_s(x_2)
-        y = linear_interpolation(x_1, x_2, y_1, y_2, s_x[x])
-        s_y[x] = y
+        if x_1 != x_2:
+            y_1 = f_s(x_1)
+            y_2 = f_s(x_2)
+            y = linear_interpolation(x_1, x_2, y_1, y_2, s_x[x])
+            s_y[x] = y
+        else:
+            s_y[x] = f_s(x_1)
 
-    plt.plot(o_x, s_y)
+
+    plt.plot(s_x + delta, s_y, linestyle='--', marker= 'o', label="Shifted function")
+    plt.legend()
     plt.show()
+
+    print(sample_size)
 
 
 # Main method for running tests and or other things.
