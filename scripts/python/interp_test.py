@@ -9,20 +9,23 @@ import matplotlib.pyplot as plt
 # @param A
 def f(A):
     Y = np.zeros_like(A)
-    for i in range(0,len(Y)):
-        if i >= 3 and i <= 4:
-            Y[i] = 1
-        else:
-            Y[i] = 0
+    Y = np.cos(A)
+    # for i in range(0,len(Y)):
+    #     if i >= 3 and i <= 4:
+    #         Y[i] = 1
+    #     else:
+    #         Y[i] = 0
     return Y
 
 
 # Same thing as above but for just one value x.
 def f_s(x):
-    if x >= 3 and x <= 4:
-        return 1
-    else:
-        return 0
+    # if x >= 3 and x <= 4:
+    #     return 1
+    # else:
+    #     return 0
+
+    return np.cos(x)
 
 
 
@@ -95,25 +98,25 @@ def test_shift_function():
     domain_size = 10
 
     # Variable for controlling how manu subsamples we want to create
-    refined = 1
+    refined = 5
 
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
 
     # o stands for original function.
     o_x = np.linspace(0,domain_size, sample_size)
-    o_y = f(o_x)
+    o_y = np.sin(o_x)
 
 
     plt.plot(o_x,o_y, marker= 'o', label= "Original function")
 
+    # #############################################################
+    delta = 0.5 * np.pi
 
 
-    #############################################################
-    delta = 0.5
-
+    # Works for int samples
     # Variable for controlling how manu subsamples we want to create
-    refined = 1
+    refined = 5
 
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
@@ -124,30 +127,41 @@ def test_shift_function():
     # such as f(x) = f(x - delta).
     s_y = np.zeros_like(s_x)
 
-
     for x in range(0,len(s_x)):
         x_1 = np.floor(s_x[x])
         x_2 = np.ceil(s_x[x])
+
+        print("Shifted x: " + str(s_x[x]))
+        print("Floor x: " + str(x_1))
+        print("Ceil x: " + str(x_2))
+
         if x_1 != x_2:
             y_1 = f_s(x_1)
             y_2 = f_s(x_2)
             y = linear_interpolation(x_1, x_2, y_1, y_2, s_x[x])
+            print("F(x): " + str(y))
             s_y[x] = y
         else:
+            print("SUP")
             s_y[x] = f_s(x_1)
 
 
-    plt.plot(s_x + delta, s_y, linestyle='--', marker= 'o', label="Shifted function")
+    plt.plot(s_x, s_y, linestyle='--', marker= 'o', label="Shifted funcqtion")
     plt.legend()
     plt.show()
 
-    print(sample_size)
+
+# Now it is interpolating between integer points so all 
+# the values in between will be linear, that is why at the peaks 
+# we a straight lines instead of a curve.
+# Solutions could be to change the two interpolating points to not be 
+# int values but something else.
 
 
 # Main method for running tests and or other things.
 def main():
-    test_f()
-    test_linear_interpolation()
+    # test_f()
+    # test_linear_interpolation()
     test_shift_function()
 
 
