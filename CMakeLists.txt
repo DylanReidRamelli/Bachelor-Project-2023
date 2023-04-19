@@ -45,6 +45,9 @@ target_link_libraries(rotate_loss Bachelor)
 add_executable(rotate_noloss RotateSerial/drivers/rotate_noloss.c)
 target_link_libraries(rotate_noloss Bachelor)
 
+add_executable(interpolate RotateSerial/drivers/interpolate.c)
+target_link_libraries(interpolate Bachelor)
+
 
 if(BACHELOR_ENABLE_CUDA)
   # enable_language(CUDA)

@@ -22,3 +22,11 @@ float keys_cubic_interpolant(float a, float x) {
     return 0;
   }
 }
+
+float linear_interpolation_model(float x) {
+  if (fabs(x) < 1) {
+    return 1 - fabs(x);
+  } else {
+    return 0;
+  }
+}

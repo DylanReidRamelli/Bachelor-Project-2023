@@ -123,11 +123,27 @@ def test_io_interpolation():
 	plt.legend()
 	plt.show()
 
+
+
+
+
+def read_c_implementation():
+	data_x = np.fromfile("../../build/interpolated_points_x.raw", dtype=np.float32)
+	data_y = np.fromfile("../../build/interpolated_points_y.raw", dtype=np.float32)
+
+
+	plt.plot(data_x,data_y, label = "Interpolated function in C")
+	plt.legend()
+	plt.show()
+
+
+
 def main():
 	# test_linear_interpolation()
 	# test_cubic_interpolation()
 	# test_cubic_interpolation_shift(2.5)
-	test_io_interpolation()
+	# test_io_interpolation()
+	read_c_implementation()
 
 
 if __name__ == '__main__':
