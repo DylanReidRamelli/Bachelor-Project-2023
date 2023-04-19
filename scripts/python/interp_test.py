@@ -48,6 +48,28 @@ def test_f():
     # TODO: Create test to see if function, works correctly.
     # Since it is a simple function for now I will assume it is correct.
 
+
+def keys_cubic_kernel(x,a):
+    if abs(x) >= 0 and abs(x) <1:
+        return (a+2)*(abs(s)**3)-(a+3)*(abs(s)**2)+1
+    elif abs(x) >= 1 and abs(x) <2:
+        return a*(abs(s)**3)-5*(abs(s)**2)+8*abs(s)-4
+    else:
+        return 0
+
+
+
+# Kernel of the cubic spline interpolation 
+def cubic_spline_kernel(x):
+    if abs(x) >= 0 and abs(x) <1:
+        return 2 / 3 - abs(x)^2 + (abs(x)^3)/2
+    elif abs(x) >= 1 and abs(x) <2:
+        return (2 - abs(x)^3)/6
+    else:
+        return 0
+
+
+
 # Returns y value given an x value and two points
 # Interpolate the two points with linear intepolation then find the 
 # y value with line equation: m*x + a
@@ -83,22 +105,11 @@ def linear_piecewise_model(x,k,delta):
         return 0
 
 
-# Definition of cubic spline model, modified for the shift.
-def cubic_spline_model(x,k, delta):
-    if abs(x) >= 0 and abs(x) <1:
-        return 2 / 3 - abs(x - k - delta)^2 + (abs(x - k - delta)^3)/2
-    elif abs(x) >= 1 and abs(x) <2:
-        return (2 - abs(x - k - delta)^3)/6
-    else:
-        return 0
-
-
-
 def test_shift_function():
     domain_size = 10
 
     # Variable for controlling how manu subsamples we want to create
-    refined = 5
+    refined = 2
 
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
@@ -108,16 +119,15 @@ def test_shift_function():
     o_y = np.sin(o_x)
 
 
-    plt.plot(o_x,o_y, marker= 'o', label= "Original function")
+    plt.plot(o_x,o_y, marker= 'o', label= "Original function: sin(x)")
 
     # #############################################################
-    delta = 0.5 * np.pi
+    delta = 2 * np.pi
 
 
     # Works for int samples
     # Variable for controlling how manu subsamples we want to create
-    refined = 5
-
+    refined = 2
     # Basiccally length of the domain array.
     sample_size = (domain_size + 1) * refined
 
@@ -127,26 +137,38 @@ def test_shift_function():
     # such as f(x) = f(x - delta).
     s_y = np.zeros_like(s_x)
 
-    for x in range(0,len(s_x)):
-        x_1 = np.floor(s_x[x])
-        x_2 = np.ceil(s_x[x])
 
-        print("Shifted x: " + str(s_x[x]))
-        print("Floor x: " + str(x_1))
-        print("Ceil x: " + str(x_2))
-
-        if x_1 != x_2:
-            y_1 = f_s(x_1)
-            y_2 = f_s(x_2)
-            y = linear_interpolation(x_1, x_2, y_1, y_2, s_x[x])
-            print("F(x): " + str(y))
-            s_y[x] = y
-        else:
-            print("SUP")
-            s_y[x] = f_s(x_1)
+    for i in range(0,len(s_x)):
+        x_1 = s_x[i]
 
 
-    plt.plot(s_x, s_y, linestyle='--', marker= 'o', label="Shifted funcqtion")
+    # Not correct. TODO: FIX THIS!
+    # for x in range(0,len(s_x)):
+    #     # x_1 = np.floor(s_x[x])
+    #     # x_2 = np.ceil(s_x[x])
+    #     x_1 = s_x[x]
+    #     if x+1 >= len(s_x):
+    #         x_2 = x_1
+    #     else:  
+    #         x_2 = s_x[x+1]
+
+    #     print("Shifted x: " + str(s_x[x]))
+    #     print("Floor x: " + str(x_1))
+    #     print("Ceil x: " + str(x_2))
+
+    #     if x_1 != x_2:
+    #         y_1 = f_s(x_1)
+    #         y_2 = f_s(x_2)
+    #         y = linear_interpolation(x_1, x_2, y_1, y_2, s_x[x])
+    #         print("F(x): " + str(y))
+    #         s_y[x] = y
+    #     else:
+    #         print("SUP")
+    #         s_y[x] = f_s(x_1)
+
+
+    plt.plot(o_x, s_y, linestyle='--', marker= 'o', label="Shifted function: cos(x + 2 * pi)")
+    plt.text(9, 0.5, "N_samples: " + str(sample_size))
     plt.legend()
     plt.show()
 
@@ -156,6 +178,7 @@ def test_shift_function():
 # we a straight lines instead of a curve.
 # Solutions could be to change the two interpolating points to not be 
 # int values but something else.
+
 
 
 # Main method for running tests and or other things.
