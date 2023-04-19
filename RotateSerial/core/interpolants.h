@@ -1,12 +1,13 @@
 // Bicubic convolution algorithm
 #include <math.h>
+#include <stdio.h>
 
 // The generating function for cubic spline intepolants.
 float cubic_spline_model(float x) {
   if (fabs(x) >= 0 && fabs(x) < 1) {
-    return 2 / 3 - pow(fabs(x), 2) + pow(fabs(x), 3) / 2;
-  } else if (fabs(x) < 2 && fabs(x) >= 1) {
-    return pow(2 - fabs(x), 3) / 6;
+    return 2.0 / 3.0 - pow(fabs(x), 2) + pow(fabs(x), 3) / 2.0;
+  } else if (fabs(x) >= 1 && fabs(x) < 2) {
+    return pow(2 - fabs(x), 3) / 6.0;
   } else {
     return 0;
   }

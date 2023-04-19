@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
   float max_x = M_PI * 4;
   float n_values_in = max_x;
-  float n_values_out = 10000;
+  float n_values_out = 1000;
   float *x = malloc(sizeof(float) * n_values_in);
   float *y = malloc(sizeof(float) * n_values_in);
 
