@@ -5,13 +5,14 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  float max_x = 30;
-  float n_values_out = 1000;
-  float *x = malloc(sizeof(float) * max_x);
-  float *y = malloc(sizeof(float) * max_x);
+  float max_x = M_PI * 4;
+  float n_values_in = max_x;
+  float n_values_out = 10000;
+  float *x = malloc(sizeof(float) * n_values_in);
+  float *y = malloc(sizeof(float) * n_values_in);
 
-  for (int i = 0; i < max_x; i++) {
-    x[i] = i;
+  for (int i = 0; i < n_values_in; i++) {
+    x[i] = i * (max_x / n_values_in);
     y[i] = sin(x[i]);
   }
 
@@ -22,8 +23,8 @@ int main(int argc, char *argv[]) {
     x_interp_samples[i] = i * (max_x / n_values_out);
   }
 
-  interpolate_1D_linear(x, y, x_interp_samples, y_interp_samples, max_x,
-                        n_values_out, 0);
+  interpolate_1D_cubic(x, y, x_interp_samples, y_interp_samples, n_values_in,
+                       n_values_out, 0);
 
   FILE *f_x = fopen("interpolated_points_x.raw", "wb");
   size_t r_x =
@@ -34,10 +35,6 @@ int main(int argc, char *argv[]) {
   size_t r_y =
       fwrite(y_interp_samples, sizeof(y_interp_samples[0]), n_values_out, f_y);
   printf("wrote %zu elements out of %d requested\n", r_y, (int)n_values_out);
-
-  for (int i = 0; i < n_values_out; i++) {
-    printf("%f\n", x_interp_samples[i]);
-  }
 
   free(x);
   free(y);
