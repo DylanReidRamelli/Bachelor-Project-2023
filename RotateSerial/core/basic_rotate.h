@@ -248,13 +248,6 @@ void rotateGatherNoLoss(float *A, float *dst_array, const float angle,
         int idx = dst_y * width + dst_x;
         dst_array[i * newSize[0] + j] = A[idx];
       }
-
-      // if (i < c_y_out + 200 && i > c_y_out) {
-      //   int idx = dst_y * width + dst_x;
-      //   dst_array[i * newSize[0] + j] = A[idx];
-      // } else {
-      //   dst_array[i * newSize[0] + j] = 0;
-      // }
     }
   }
 }

@@ -40,4 +40,6 @@ int main(int argc, char *argv[]) {
   free(y);
   free(x_interp_samples);
   free(y_interp_samples);
+  fclose(f_x);
+  fclose(f_y);
 }
