@@ -99,6 +99,9 @@ def fourier_image_shift():
     arr_xy = np.mgrid[0:ori_y, 0:ori_x]
     arr_y = arr_xy[0]-150
     arr_x = arr_xy[1]-100
+    
+    
+    print(arr_xy)
 
     F = _fft_shear(data, arr_x, a, ax=1, pad=0)
     F = _fft_shear(F, arr_y, b, ax=0, pad=0)
@@ -145,46 +148,46 @@ def fourier_image_shift():
     plt.show()
 
 
-# def image_test():
+def image_test():
 
-#     N = 7
-#     x = np.linspace(0, 3 * np.pi, N)
-#     # x = np.random.rand(N,1)
-#     y = np.sin(x)
+    N = 7
+    x = np.linspace(0, 3 * np.pi, N)
+    # x = np.random.rand(N,1)
+    y = np.sin(x)
 
-#     print("Original:", y)
-#     print(np.fft.fftshift(y))
+    print("Original:", y)
+    print(np.fft.fftshift(y))
 
-#     im = np.fromfile("../../Images/wrapped_sinusoid.raw", dtype=np.float32)
-#     im = np.reshape(im, (256, 256))
+    im = np.fromfile("../../Images/wrapped_sinusoid.raw", dtype=np.float32)
+    im = np.reshape(im, (256, 256))
 
-#     # Pad array such that image is twice the original size
-#     # to avoid Fourier wraparound artefact
-#     impad = np.pad(im, (256, 256))
+    # Pad array such that image is twice the original size
+    # to avoid Fourier wraparound artefact
+    impad = np.pad(im, (256, 256))
 
-#     # Apply fftshift in real space before fft2 (!)
-#     fft = np.fft.fftshift(impad)
-#     # Do the regular fft --> fftshift --> rotate --> ifftshift --> ifft2
-#     fft = np.fft.fft2(fft)
+    # Apply fftshift in real space before fft2 (!)
+    fft = np.fft.fftshift(impad)
+    # Do the regular fft --> fftshift --> rotate --> ifftshift --> ifft2
+    fft = np.fft.fft2(fft)
 
-#     fft = np.fft.fftshift(fft)
-#     fft = ndimage.rotate(fft, 30, reshape=False)
-#     # fft = np.fft.ifftshift(fft)
+    fft = np.fft.fftshift(fft)
+    fft = ndimage.rotate(fft, 30, reshape=False)
+    # fft = np.fft.ifftshift(fft)
 
-#     out = np.fft.ifft2(fft)
+    out = np.fft.ifft2(fft)
 
-#     # # Apply ifftshift in real space after ifft2 (!)
-#     out = np.fft.ifftshift(out)
+    # # Apply ifftshift in real space after ifft2 (!)
+    out = np.fft.ifftshift(out)
 
-#     # # Crop back to original size
-#     out = out[256:-256, 256:-256]
+    # # Crop back to original size
+    out = out[256:-256, 256:-256]
 
-#     # # Take absolute value
-#     im_rotated = abs(out)
+    # # Take absolute value
+    im_rotated = abs(out)
 
-#     plt.imshow(im_rotated, cmap='gray')
-#     # plt.imshow(np.reshape(data, (200,300)), cmap='gray')
-#     plt.show()
+    plt.imshow(im_rotated, cmap='gray')
+    # plt.imshow(np.reshape(data, (200,300)), cmap='gray')
+    plt.show()
 
 
 def testing_solution():
