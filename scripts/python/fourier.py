@@ -99,8 +99,7 @@ def fourier_image_shift():
     arr_xy = np.mgrid[0:ori_y, 0:ori_x]
     arr_y = arr_xy[0]-150
     arr_x = arr_xy[1]-100
-    
-    
+
     print(arr_xy)
 
     F = _fft_shear(data, arr_x, a, ax=1, pad=0)
@@ -265,8 +264,8 @@ def testing_solution():
 def main():
     # fourier_transform_with_shift()
     # image_test()
-    fourier_image_shift()
-    # testing_solution()
+    # fourier_image_shift()
+    testing_solution()
 
 
 if __name__ == '__main__':
