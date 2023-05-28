@@ -4,6 +4,7 @@
 %Packages
 \captionsetup{labelfont={bf}}
 \usepackage[]{pdfpages}
+\usepackage{tabularx}
 
 
 
@@ -30,11 +31,9 @@
 	\maketitle	
 	\section{Introduction, Motivation}\label{introduction}
 	For many years the amount of digital imaging data has been increasing exponentially (citation) and as such the need for acquiring this large data and process it with care has become a central point of focus. The goal of this project is to process high quality signals, in this case images, by rotating them using techniques such as the Fourier Transform, Shift Theorem, FIR filtering and CUDA parallel processing.
-		
-		
-	WHY, WHAt for? See applications:
+	The accurate rotation of images is very useful in many applications such as Data Augmentation for example. For Data augmentation we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally. 
 	
-	The accurate rotation of images is very useful in applications such as Data Augmentation for Convoluted Neural Networks where one might have to rotate an image multiple times at random before feeding it to the neural network, such as in Data Visualization for multi-modal imaging. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly.
+	Another application of this technique can be seen in Data Visualization for multi-modal imaging. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly. Go into more detail.. ask Diego.
 	
 	In our project we will use a method of rotation which was described in the article titled "Convolution-based inteprolation for fast, high-quality rotation of images"\cite{main_article} where the rotation matrix
 	\begin{equation*}
@@ -130,7 +129,7 @@
 	
 
 	\section{Project Requirements}
-	To complete this project I made use of different tools such as, Python, Jupyter Notebook, C/C++ and CUDA.
+	To complete this project we made use of different tools such as, Python, Jupyter Notebook, C/C++ and CUDA.
 	
 	
 	
@@ -200,7 +199,7 @@
 		Z_m = e^{-i \frac{2\pi}{N}  \delta m} \displaystyle\sum_{r= -\delta}^{N-1 - \delta}g_k[r]e^{-i \frac{2\pi}{N} rm}
 	\end{equation*}
 	
-	The sum now has exactly the same as before:
+	The sum now has exactly the same range as before:
 	
 	\begin{equation*}
 		Z_m = e^{-i \frac{2\pi}{N}  \delta m} \displaystyle\sum_{k=0}^{N-1}g_k[k]e^{-i \frac{2\pi}{N} km}
@@ -263,7 +262,7 @@
 	To alleviate the problems that arise when shifting a signal by a fractional amount we can use a filter $L$ that is convoluted with the shifted signal.
 	
 	\begin{equation*}
-		L_m = \frac{sin(a)}{a} |_{a = sin(\frac{2\pi wave\_n(m)}{N})}
+		L_m = \frac{sin(a)}{a} |_{a = \frac{2\pi wave\_n(m)}{N}}
 	\end{equation*}
 	
 	Apply lanczos filter to fractional shift to smooth the result.
@@ -304,6 +303,33 @@
 	\end{itemize}
 	
 	
+	
+	
+	
+	\section*{Plan}
+	\begin{table}
+		\centering
+		\scriptsize \begin{tabularx}{\linewidth}{|X|X|X|X|}
+			\hline
+			Week& Activity & Duration in Weeks & Status \\ \hline
+			W1& Finish all 2D image rotations in C and start rotations with CUDA.& 1W& COMPLETED \\ \hline
+			W2& Complete 2D Rotations with CUDA and read/fully understand research article "Convolution-based Interpolation for fast, high quality Rotation of Images."& 1W &DONE. CUDA rotations are not complete for gether no loss. Need to undserstand better when you can call kernels and where.\\ \hline
+			W3&Meet and ask questions about research article,  keep learning paper. Finish gathernoloss in C, keep looking at CUDA examples. & 1W&Started summarizing the article and also a reference book about digital signal processing, which is helping a lot in understanding the article. DONE \\ \hline
+			W4& Fully implement CUDA code for gathernoloss  and fully understand article.& 1W &Able to implement CUDA coda for gathernoloss still need this week for article. DONE\\ \hline
+			W5& Plot a sinusoid function around multiple circles to create a n image to serve as test for rotations. Understand how to translate an array by a  fractional value&  1W & DONE \\ \hline
+			W6&Progress Report , start writing report, start with abstract. Continue with translate signal.&  1W & NOT DONE\\ \hline
+			W7&Start implementing interpolation using 3 pass algorithm in 2d test image& 2-3W& IN PROGRESS \\ \hline
+			W8&Continue implementing interpolation using 3 pass algorithm in 2d test image  and start looking into parallelizing the code with either MPI or CUDA&1W & CANCELLED \\ \hline
+			W9&Continue implementing interpolation using 3 pass algorithm in 2d test image & 1W & IN PROGRESS \\ \hline
+			W10&Continue implementing interpolation using 3 pass algorithm in 2d test image ... and finish report &  2-3W & IN PROGRESS\\ \hline
+			W11&Continue implementing interpolation using 3 pass algorithm in 2d test image ... and finish report&  1W & IN PROGRESS\\ \hline
+			W12&Maybe add CUDA or MPI support and finish report&  1W & IN PROGRESS\\
+			\hline
+		\end{tabularx}\caption{Plan}
+	\end{table}
+	
+	
+	\includepdf{pdf's/poster_template.pdf}
 	\section{Solution}
 	\section{Validation}
 	\section{Conclusion}
