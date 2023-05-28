@@ -3,6 +3,7 @@
 
 %Packages
 \captionsetup{labelfont={bf}}
+\usepackage[]{pdfpages}
 
 
 
@@ -35,15 +36,46 @@
 	
 	The accurate rotation of images is very useful in applications such as Data Augmentation for Convoluted Neural Networks where one might have to rotate an image multiple times at random before feeding it to the neural network, such as in Data Visualization for multi-modal imaging. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly.
 	
-	1D Translations cornerstone of 2D Translations which are the cornerstone for 3D translations.
+	In our project we will use a method of rotation which was described in the article titled "Convolution-based inteprolation for fast, high-quality rotation of images"\cite{main_article} where the rotation matrix
+	\begin{equation*}
+		R(\theta) = 
+		\begin{pmatrix}
+			cos\theta & -sin\theta\\
+			sin\theta & cos\theta
+		\end{pmatrix}
+	\end{equation*} 
+	is refactorized as three matrices each of which represents a shearing in a cardinal direction.
+		\begin{equation*}
+		R(\theta) = 
+		\begin{pmatrix}
+			cos\theta & -sin\theta\\
+			sin\theta & cos\theta
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			1 & -tan\theta/2\\
+			0 & 1
+		\end{pmatrix}
+		\cdot
+		\begin{pmatrix}
+			1 & 0\\
+			sin\theta & 1
+		\end{pmatrix}
+		\cdot
+		\begin{pmatrix}
+			1 & -tan\theta/2\\
+			0 & 1
+		\end{pmatrix}
+	\end{equation*} 
+	
+	The first matrix shears the image in the $x$ direction by $\Delta_x = -y\cdot tan(\theta/2)$, the second matrix shears the image in the $y$ direction by $\Delta_y = x \cdot sin(\theta)$ and the last matrix shears again in the $x$ direction by $\Delta_x$.\\
+	
+	Given this definition of a 2D rotation we can perform the operation as a sequence of three 1D translations on the 1D input array that represents our image.
+	
+	"Explain 2D to 3D."
 	
 	FT: Direct solver instead of iterative, takes in a lot of data.
 	
-	Applications:
-	\begin{itemize}
-		\item Data augmentation, for training in CNN
-		\item Data visualization, multi-model imaging.
-	\end{itemize}
 	
 	\section{State of the art}
 	For certain applications such as... it is required to be able to rotate images while maintaining the highest quality possible. To achieve satisfying results the general approach is to use bilinear and nearest neighbour interpolation.
@@ -128,20 +160,20 @@
 		e^{ix} = cos(x)  + i sin(x)
 	\end{equation}
 	
+	Useful property:
+	\begin{equation}
+		cos(w)= \frac{1}{2}(e^{iw}+ e^{-iw})
+	\end{equation}
+	
 	
 	\subsection{Fourier Transform with Shift Theorem}
-	Given $K=4$ samples of a random function we can calculate the Fourier transform to find the values at each frequency.
-	Any function(signal) has exactly $\lfloor \frac{N}{2}\rfloor+1$ distinct frequencies, but in the Fourier transform we use $M=N$ Frequencies.
-	\paragraph{Example}
-	$g_k = [1,0,-1,0]$, i.e the cos() function values when sampling the function with a period $T=2\pi$ at 4 evenly spaced intervals of $\pi/2$
-	
-	To find the amplitudes of each frequency m of M we can do:
+	Here we derive the shift theorem for a discrete signal starting from the normal Fourier Transform with $g_k$ being our 1D input array, $N$ the number of samples and $m$ the frequency:
 	\begin{equation*}
 		G_m = \displaystyle\sum_{k=0}^{N-1}g_k[k]e^{-i \frac{2\pi}{N} km}
 	\end{equation*}
 	
-	Now instead of $g_k[k]$, we want $g_k[k - \delta]$
-	so the above equation can be rewritten as:
+	Now instead of $g_k[k]$, we want $g_k[k - \delta]$ where $\delta$ is the amount we want to shift.
+	So the above equation can be rewritten as:
 	\begin{equation*}
 		H_m = \displaystyle\sum_{k=0}^{N-1}g_k[k - \delta]e^{-i \frac{2\pi}{N} km}
 	\end{equation*}
@@ -150,7 +182,7 @@
 		H_m = \displaystyle\sum_{r = 0 - \delta}^{N-1-\delta}g_k[r]e^{-i \frac{2\pi}{N} km}, r = k - \delta 
 	\end{equation*}
 	
-	Since $r = k - \delta$ then $ k = r + \delta$ and as such:
+	Since $r = k - \delta$ then $ k = r + \delta$, and as such:
 	
 	\begin{equation*}
 		H_m = \displaystyle\sum_{r= -\delta}^{N-1 - \delta}g_k[r]e^{-i \frac{2\pi}{N} (r + \delta)m}
@@ -162,13 +194,13 @@
 		H_m = \displaystyle\sum_{r= -\delta}^{N-1 - \delta}g_k[r]e^{-i \frac{2\pi}{N} rm}e^{-i \frac{2\pi}{N}  \delta m}
 	\end{equation*}
 	
-	Ann factor it out of the sum:
+	And factor it out of the sum:
 	
 	\begin{equation*}
 		H_m = e^{-i \frac{2\pi}{N}  \delta m} \displaystyle\sum_{r= -\delta}^{N-1 - \delta}g_k[r]e^{-i \frac{2\pi}{N} rm}
 	\end{equation*}
 	
-	The sum now is exactly the same as before but with a different range and value for f. We can now try it out in python.
+	The sum now has exactly the same as before:
 	
 	\begin{equation*}
 		H_m = e^{-i \frac{2\pi}{N}  \delta m} \displaystyle\sum_{k=0}^{N-1}g_k[k]e^{-i \frac{2\pi}{N} km}
@@ -177,6 +209,9 @@
 	\begin{equation}
 		H_m = e^{-i \frac{2\pi}{N}  \delta m} G_m
 	\end{equation}
+	
+	
+	Here is a small example made in python:
 	
 	The above equation works well for non fractional shifts but has problems when we want to shift by a fractional amount.
 	"Explain why".\\
