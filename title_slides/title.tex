@@ -1,0 +1,43 @@
+\documentclass[]{article}
+\usepackage{tabularx}
+\usepackage[a4paper]{geometry}
+
+\title{Bachelor Project Title and Summary}
+\author{}
+\begin{document}
+\section*{Bachelor Project Title and Summary}
+	\begin{itemize}
+		\item Name: Dylan Reid Ramelli
+		\item Advisor: Prof. Rolf Krause
+		\item Co-Advisors: Diego Rossinelli, Patrick Zulian
+		\item Title: Spectrally accurate resampling of rotated images.
+	\end{itemize}
+
+
+\section*{Bachelor Project Title and Summary}
+	\begin{itemize}
+		\item \small Objective: Accurately rotate high quality 2D and 3D images. Possibly also be able to run on GPU using CUDA or MPI.
+	\end{itemize}
+
+\section*{Plan}
+	\begin{table}
+		\centering
+		\scriptsize \begin{tabularx}{\linewidth}{|X|X|X|X|}
+			\hline
+			Week& Activity & Duration in Weeks & Status \\ \hline
+			W1& Finish all 2D image rotations in C and start rotations with CUDA.& 1W& COMPLETED \\ \hline
+			W2& Complete 2D Rotations with CUDA and read/fully understand research article "Convolution-based Interpolation for fast, high quality Rotation of Images."& 1W &DONE. CUDA rotations are not complete for gether no loss. Need to undserstand better when you can call kernels and where.\\ \hline
+			W3&Meet and ask questions about research article,  keep learning paper. Finish gathernoloss in C, keep looking at CUDA examples. & 1W&Started summarizing the article and also a reference book about digital signal processing, which is helping a lot in understanding the article. DONE \\ \hline
+			W4& Fully implement CUDA code for gathernoloss  and fully understand article.& 1W &Able to implement CUDA coda for gathernoloss still need this week for article. DONE\\ \hline
+			W5& Plot a sinusoid function around multiple circles to create a n image to serve as test for rotations. Understand how to translate an array by a  fractional value&  1W & IN PROGRESS \\ \hline
+			W6&Progress Report , start writing report, start with abstract. Continue with translate signal.&  1W & IN PROGRESS\\ \hline
+			W7&Start implementing interpolation using 3 pass algorithm in 2d test image& 2-3W& PLANNED \\ \hline
+			W8&Continue implementing interpolation using 3 pass algorithm in 2d test image  and start looking into parallelizing the code with either MPI or CUDA&1W & PLANNED  \\ \hline
+			W9&Continue implementing interpolation using 3 pass algorithm in 2d test image & 1W & PLANNED \\ \hline
+			W10&Testing, improving... and finish report &  2-3W & PLANNED\\ \hline
+			W11&Testing, improving... and finish report&  1W & PLANNED\\ \hline
+			W12&Testing, improving...  and finish report&  1W & PLANNED\\
+			\hline
+		\end{tabularx}
+	\end{table}
+\end{document}
