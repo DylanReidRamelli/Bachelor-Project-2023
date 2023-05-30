@@ -33,44 +33,9 @@
 	For many years the amount of digital imaging data has been increasing exponentially (citation) and as such the need for acquiring this large data and process it with care has become a central point of focus. The goal of this project is to process high quality signals, in this case images, by rotating them using techniques such as the Fourier Transform, Shift Theorem, FIR filtering and CUDA parallel processing.
 	The accurate rotation of images is very useful in many applications such as Data Augmentation for example. For Data augmentation we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally. 
 	
-	Another application of this technique can be seen in Data Visualization for multi-modal imaging. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly. Go into more detail.. ask Diego.
-	
-	In our project we will use a method of rotation which was described in the article titled "Convolution-based inteprolation for fast, high-quality rotation of images"\cite{main_article} where the rotation matrix
-	\begin{equation*}
-		R(\theta) = 
-		\begin{pmatrix}
-			cos\theta & -sin\theta\\
-			sin\theta & cos\theta
-		\end{pmatrix}
-	\end{equation*} 
-	is refactorized as three matrices each of which represents a shearing in a cardinal direction.
-		\begin{equation*}
-		R(\theta) = 
-		\begin{pmatrix}
-			cos\theta & -sin\theta\\
-			sin\theta & cos\theta
-		\end{pmatrix}
-		=
-		\begin{pmatrix}
-			1 & -tan\theta/2\\
-			0 & 1
-		\end{pmatrix}
-		\cdot
-		\begin{pmatrix}
-			1 & 0\\
-			sin\theta & 1
-		\end{pmatrix}
-		\cdot
-		\begin{pmatrix}
-			1 & -tan\theta/2\\
-			0 & 1
-		\end{pmatrix}
-	\end{equation*} 
-	
-	The first matrix shears the image in the $x$ direction by $\Delta_x = -y\cdot tan(\theta/2)$, the second matrix shears the image in the $y$ direction by $\Delta_y = x \cdot sin(\theta)$ and the last matrix shears again in the $x$ direction by $\Delta_x$.\\
-	
-	Given this definition of a 2D rotation we can perform the operation as a sequence of three 1D translations on the 1D input array that represents our image.
-	
+	Another application of this technique can be seen in Data Visualization for multi-modal imaging. Images are taken at different times or in different ways, such as in a PET-CT scan and rotation can enable us to re-align the elements present in these images. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly. Go into more detail.. ask Diego.
+
+
 	"Explain 2D to 3D."
 	
 	FT: Direct solver instead of iterative, takes in a lot of data.
@@ -128,14 +93,50 @@
 	\fi
 	
 
-	\section{Project Requirements}
+	\section{Methodology}
 	To complete this project we made use of different tools such as, Python, Jupyter Notebook, C/C++ and CUDA.
+	
+		In our project we will use a method of rotation which was described in the article titled "Convolution-based inteprolation for fast, high-quality rotation of images"\cite{main_article} where the rotation matrix
+	\begin{equation*}
+		R(\theta) = 
+		\begin{pmatrix}
+			cos\theta & -sin\theta\\
+			sin\theta & cos\theta
+		\end{pmatrix}
+	\end{equation*} 
+	is factorized as three matrices each of which represents a shearing in a cardinal direction.
+	\begin{equation*}
+		R(\theta) = 
+		\begin{pmatrix}
+			cos\theta & -sin\theta\\
+			sin\theta & cos\theta
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			1 & -tan\theta/2\\
+			0 & 1
+		\end{pmatrix}
+		\cdot
+		\begin{pmatrix}
+			1 & 0\\
+			sin\theta & 1
+		\end{pmatrix}
+		\cdot
+		\begin{pmatrix}
+			1 & -tan\theta/2\\
+			0 & 1
+		\end{pmatrix}
+	\end{equation*} 
+	
+	The first matrix shears the image in the $x$ direction by $\Delta_x = -y\cdot tan(\theta/2)$, the second matrix shears the image in the $y$ direction by $\Delta_y = x \cdot sin(\theta)$ and the last matrix shears again in the $x$ direction by $\Delta_x$.\\
+	
+	Given this definition of a 2D rotation we can perform the operation as a sequence of three 1D translations on the 1D input array that represents our image.
 	
 	
 	
 	\subsection{Frequencies of a signal}
 	\begin{equation}
-		freq_{n} = \lfloor \frac{n}{2} \rfloor + 1
+		freq_{n} = \lfloor \frac{n}{2} \rfloor + 1 \label{freq_equation}
 	\end{equation}
 	Visual representation with $n=3$ of the discrete Fourier transform of a function $g(x)$
 	
@@ -161,7 +162,7 @@
 	
 	Useful property:
 	\begin{equation}
-		cos(w)= \frac{1}{2}(e^{iw}+ e^{-iw})
+		\cos(w)= \frac{1}{2}(e^{iw}+ e^{-iw})
 	\end{equation}
 	
 	
@@ -206,7 +207,7 @@
 	\end{equation*}
 	
 	\begin{equation}
-		Z_m = e^{-i \frac{2\pi}{N}  \delta m} G_m = H_m \cdot G_m
+		Z_m = e^{-i \frac{2\pi}{N}  \delta m} G_m = H_m \cdot G_m \label{shift_equation}
 	\end{equation}
 	
 	
@@ -214,24 +215,23 @@
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.5\columnwidth]{images/box_original_n50.png}
+		\includegraphics[width=0.48\columnwidth]{images/box_original_n50.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/box_shifted_delta10_n50.png} \\
+		\parbox{0.48\columnwidth}{\centering Left} \hfill
+		\parbox{0.48\columnwidth}{\centering Right}
 		\caption{Original 1D function.}
 	\end{figure}
 	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.5\columnwidth]{images/box_shifted_delta10_n50.png}
-		\caption{Function shifted by $\delta=10$}
-	\end{figure}
 	
 	
-	The above equation works well for non fractional shifts but has a certain problem when we want to shift by a fractional amount.
+	The above equation \ref{shift_equation} works well for any kind of shift that we want to perform on our signal but for any fractional amount we encounter some problems with the use of the correct frequency indexes.
+	Here is a graphical example that was found to be useful: With an $N=3$ number of samples of a signal we have exactly $2$ distinct frequencies \ref{freq_equation} but the total frequencies are actually $3$ and they are $[0+i0, \frac{1}{2}+i\frac{\sqrt{3}}{2}, \frac{1}{2}-i\frac{\sqrt{3}}{2}]$. The last two frequencies are one the complex conjugate of the other.
+	
 	"Explain why".\\
 	To solve this we need to take into consideration the negative frequencies and in particular if the number of samples is odd or even.
 	Normally we multiply each sample by its corresponding phase, which is based on the frequency number $m$
 	but since we need to take into consideration the negative frequencies we can define a function called wavenum that returns the correct frequency index to use in the phase shift:
 	\begin{equation*}
-		wave\_n(m) = (m + N // 2) \bmod N - (N//2)
+		wave\_n(m) = (m + \lfloor N/2 \rfloor ) \bmod N - \lfloor N/2 \rfloor
 	\end{equation*}
 	
 	\begin{figure}[h]
@@ -241,11 +241,11 @@
 	\end{figure}
 	
 	\begin{equation*}
-		H_m = e^{-i \frac{2\pi}{N}  \delta wave\_n(m)}
+		H_m = e^{-i \frac{2\pi}{N}  \delta \text{wave}\_n(m)}
 	\end{equation*}
 	
 	\begin{equation}
-		Z_m = H_{wave\_n(m)} \cdot G_m
+		Z_m = H_{\text{wave}\_n(m)} \cdot G_m
 	\end{equation}	
 	
 	
@@ -261,9 +261,10 @@
 	\subsection{Lanczos Filter and FIR}
 	To alleviate the problems that arise when shifting a signal by a fractional amount we can use a filter $L$ that is convoluted with the shifted signal.
 	
-	\begin{equation*}
-		L_m = \frac{sin(a)}{a} |_{a = \frac{2\pi wave\_n(m)}{N}}
-	\end{equation*}
+	\begin{align*}
+		L_m &= \frac{\sin(a)}{a},\\
+		a &= \frac{2\pi wave\_n(m)}{N}
+	\end{align*}
 	
 	Apply lanczos filter to fractional shift to smooth the result.
 	
@@ -280,11 +281,15 @@
 	\newpage
 	
 	\section{Project Design}
+		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simply shifting a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount. We then applied the same methodology to a 2D signal, which in our case was an image. We built the 2D kernel based on the 1D one that we created before. 	
+ \\
+	
 	Explain 1D,2D,3D transposition.
 	Simplification of 2D rotation using 1D translations.
 	
+	Bottom-up , start with 1d kernel then build 2d kernels starting from 1d.
 	
-	
+
 	\section{Implementation}
 	\begin{itemize}
 		\item Problems while implementing the code
@@ -305,8 +310,7 @@
 	
 	
 	
-	
-	\section*{Plan}
+	\newpage
 	\begin{table}
 		\centering
 		\scriptsize \begin{tabularx}{\linewidth}{|X|X|X|X|}
