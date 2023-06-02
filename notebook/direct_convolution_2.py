@@ -4,20 +4,22 @@ from numpy import fft
 from matplotlib.animation import FuncAnimation
 
 
-fig, ax = plt.subplots(2, 3)
+# fig, ax = plt.subplots(2, 3)
+fig, ax = plt.subplots()
 def wavenum(i, N): return (i + N // 2) % N - N // 2
 
 
-n = 300
-filter_size = n//2
+n = 100
+filter_size = 90
 x_n = np.arange(n)
 x0 = n * 0.5
 x = x_n < x0
 x = np.array(x)
 # ax[0, 0].plot(x_n, x)
 
-DELTA = 10
-
+integer_part = 15
+fractional_part = .5
+DELTA = integer_part + fractional_part
 ########################
 # Create filter kernel.
 M = 3/2
@@ -31,9 +33,11 @@ for i in range(filter_size):
 H[0] = 3/2 + 3/np.pi
 # H /= 3/2
 
-H = fft.fftshift(H)
-ax[0, 0].plot(np.arange(filter_size), H)
-ax[0, 1].plot(np.arange(filter_size), np.fft.ifft(H))
+# H = fft.fftshift(H)
+# ax.stem(np.arange(filter_size), np.fft.fftshift(np.fft.ifft(H)), basefmt="gray")
+# ax.plot(np.arange(filter_size), fft.fftshift(H))
+# ax[0, 0].plot(np.arange(filter_size), H)
+# ax[0, 1].plot(np.arange(filter_size), np.fft.ifft(H))
 
 
 ########################
@@ -73,33 +77,36 @@ ax[0, 1].plot(np.arange(filter_size), np.fft.ifft(H))
 
 # ########################
 # # Create phase shift
-# L = np.zeros(filter_size, dtype=complex)
-# for i in range(filter_size):
-#     L[i] = np.exp(-2j * np.pi * DELTA * wavenum(i, filter_size)/filter_size)
+L = np.zeros(filter_size, dtype=complex)
+for i in range(filter_size):
+    L[i] = np.exp(-2j * np.pi * DELTA * wavenum(i, filter_size)/filter_size)
+    
+# L = fft.fftshift(L)
 # ax[0, 2].plot(np.arange(filter_size), L)
 # #######################
 
 # ########################
 # # Multiply filter kernel by phase shift and do inverse transform.
-# h = np.fft.ifft(G * L)
+h = np.fft.ifft(H * L)
 # h = np.fft.fftshift(h)
-# ax[1, 0].plot(np.arange(filter_size), h)
+# ax.plot(np.arange(filter_size), h)
 # ########################
 
 # ########################
 # # Apply filter to signal in time domain to shift by the fractional amount.
-# z = np.zeros(n)
-# z = np.convolve(x, h, 'same')
+z = np.zeros(n)
+z = np.convolve(x, h, 'same')
 
 # ax[1, 1].plot(np.arange(n), x)
-# ax[1, 1].plot(np.arange(n), z)
+# ax.plot(np.arange(n),x)
+# ax.plot(np.arange(n), z)
 
 ########################
 # Shift by the integer amount
-# z_final = np.zeros(n)
-# for i in range(n):
-#     z_final[i] = z[i-10]
+z_final = np.zeros(n)
+for i in range(n):
+    z_final[i] = z[i-integer_part]
 
-# ax[1, 2].plot(np.arange(n), z_final)
-# ax[1, 2].plot(np.arange(n), x)
+ax.plot(np.arange(n), z_final)
+ax.plot(np.arange(n), x)
 plt.show()
