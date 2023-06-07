@@ -8,6 +8,7 @@ project(
 
 include(cmake/BachelorOptions.cmake)
 include(cmake/BachelorFunctions.cmake)
+find_package(PythonInterp REQUIRED)
 
 
 # Add CUDA option.
@@ -47,6 +48,19 @@ target_link_libraries(rotate_noloss Bachelor)
 
 add_executable(interpolate RotateSerial/drivers/interpolate.c)
 target_link_libraries(interpolate Bachelor)
+
+# add_executable(shift_fourier RotateSerial/drivers/shift_fourier.c)
+# target_link_libraries(shift_fourier Bachelor)
+
+
+add_custom_command(OUTPUT "RotateSerial/core/convolution.h"
+    COMMAND "${PYTHON_EXECUTABLE}" "RotateSerial/python/convolution.py" --argument
+    DEPENDS some_target)
+
+add_custom_target(shift_fourier ALL
+    DEPENDS "RotateSerial/core/convolution.h")
+
+# target_link_libraries(shift_fourier Bachelor)
 
 
 if(BACHELOR_ENABLE_CUDA)
