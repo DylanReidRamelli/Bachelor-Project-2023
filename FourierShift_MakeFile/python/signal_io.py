@@ -8,9 +8,9 @@ def read_data(image_path_original, image_path_modified, filter_path):
     # ny = 256
 
     # Load the data from the file
-    data = np.fromfile(image_path_original, dtype=np.double)
+    data = np.fromfile(image_path_original, dtype=np.single)
     data_modified = np.fromfile(image_path_modified, dtype=np.single)
-    # filter_data = np.fromfile(filter_path, dtype=float)
+    filter_data = np.fromfile(filter_path, dtype=np.csingle)
     n = 100
     # data = np.reshape(data, (ny, nx))
 
@@ -23,10 +23,10 @@ def read_data(image_path_original, image_path_modified, filter_path):
 
     # Visualize the data as an image
     # plt.imshow(data, cmap='gray')
-    plt.plot(np.arange(n), data)
-    plt.plot(np.arange(n), data_modified)
+    # plt.plot(np.arange(n), data)
+    # plt.plot(np.arange(n), data_modified)
     # print(filter_data)
-    # plt.stem(np.arange(41), filter_data.real)
+    plt.stem(np.arange(41), filter_data.real)
     # plt.stem(np.arange(41), phase_data)
     # plt.stem(np.arange(41), original_filter_data)
 

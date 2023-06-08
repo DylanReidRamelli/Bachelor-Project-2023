@@ -16,26 +16,29 @@ int main(int argc, char *argv[]) {
 
   enum { FILTER_SUPPORT = _N_ };
 
-  const double SHIFT = atof(argv[1]);
+  const float SHIFT = atof(argv[1]);
   int M = 3;
   int n = 100;
-  double *x = calloc(n, sizeof(double));
+  float *x = calloc(n, sizeof(float));
   for (int i = 0; i < floor(n / 2); i++) {
     x[i] = 1;
   }
 
   // Create filter
-  double complex *H = calloc(FILTER_SUPPORT, sizeof(double complex));
+  float complex *H = calloc(FILTER_SUPPORT, sizeof(float complex));
   create_filter(H, FILTER_SUPPORT, M);
 
-  double complex *L = calloc(FILTER_SUPPORT, sizeof(double complex));
+  float complex *L = calloc(FILTER_SUPPORT, sizeof(float complex));
   create_phase_shift(L, FILTER_SUPPORT, SHIFT);
 
-  double complex *z = calloc(FILTER_SUPPORT, sizeof(double complex));
+  float complex *z = calloc(FILTER_SUPPORT, sizeof(float complex));
   shift_filter(H, L, z, FILTER_SUPPORT, M);
 
   float output[n];
-  dconv(x, z, output);
+  dconv(x, n, z, output);
+
+  // Shift by the integera part
+  const int INT_SHIFT = SHIFT % 1;
 
   FILE *fp = fopen("original_signal.raw", "wb");
   if (fp) {
