@@ -1,0 +1,26 @@
+ #include <stddef.h>
+ static void kconv(const float * in0,
+const float w0,
+const float w1,
+const float w2,
+const float w3,
+const float w4,
+const float w5,
+const float w6,
+const float w7,
+const float w8,
+const float w9,
+const float w10,
+const float w11,
+const float w12,
+const float w13,
+const float w14,
+const float w15,
+const float w16,
+const float w17,
+const float w18,
+const float w19,
+const float w20,
+float * out);
+
+void dconv(const float *in, const float *w, float*out);
