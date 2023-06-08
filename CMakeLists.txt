@@ -49,17 +49,20 @@ target_link_libraries(rotate_noloss Bachelor)
 add_executable(interpolate RotateSerial/drivers/interpolate.c)
 target_link_libraries(interpolate Bachelor)
 
-# add_executable(shift_fourier RotateSerial/drivers/shift_fourier.c)
-# target_link_libraries(shift_fourier Bachelor)
 
 
-add_custom_command(OUTPUT "RotateSerial/core/convolution.h"
-    COMMAND "${PYTHON_EXECUTABLE}" "RotateSerial/python/convolution.py" --argument
-    DEPENDS some_target)
+add_custom_command(OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/RotateSerial/core/convolution.h"
+    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/RotateSerial/python/convolution.py" 20
+    DEPENDS shift_fourier)
 
 add_custom_target(shift_fourier ALL
-    DEPENDS "RotateSerial/core/convolution.h")
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/RotateSerial/core/convolution.h")
 
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/RotateSerial/core/convolution.h DESTINATION RotateSerial/core)
+
+# target_link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/RotateSerial/core/convolution.h Bachelor)
+
+# add_executable(shift_fourier RotateSerial/drivers/shift_fourier.c)
 # target_link_libraries(shift_fourier Bachelor)
 
 

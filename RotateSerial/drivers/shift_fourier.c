@@ -8,6 +8,9 @@
 
 int main(int argc, char *argv[]) {
 
+  if (2 != argc) {
+  }
+
   const double SHIFT = 10.5;
 
   int n = 100;
@@ -17,16 +20,14 @@ int main(int argc, char *argv[]) {
   }
 
   // Create filter
-  int filterSize = 41;
-  int M = 3;
-  double complex *H = calloc(filterSize, sizeof(double complex));
-  create_filter(H, filterSize, M);
+  double complex *H = calloc(FILTER_SIZE, sizeof(double complex));
+  create_filter(H, FILTER_SIZE, M);
 
-  double complex *L = calloc(filterSize, sizeof(double complex));
-  create_phase_shift(L, filterSize, SHIFT);
+  double complex *L = calloc(FILTER_SIZE, sizeof(double complex));
+  create_phase_shift(L, FILTER_SIZE, SHIFT);
 
-  double complex *z = calloc(filterSize, sizeof(double complex));
-  shift_filter(H, L, z, filterSize, M);
+  double complex *z = calloc(FILTER_SIZE, sizeof(double complex));
+  shift_filter(H, L, z, FILTER_SIZE, M);
 
   FILE *fp = fopen("original_signal.raw", "wb");
   if (fp) {
@@ -34,15 +35,9 @@ int main(int argc, char *argv[]) {
     printf("wrote %zu elements out of %d requested\n", r, n);
   }
 
-  FILE *fp1 = fopen("shifted_signal.raw", "wb");
-  if (fp1) {
-    size_t r = fwrite(x_shifted, sizeof(x_shifted[0]), n + filterSize - 1, fp1);
-    printf("wrote %zu elements out of %d requested\n", r, n + filterSize - 1);
-  }
-
   FILE *fp2 = fopen("filter.raw", "wb");
   if (fp2) {
-    size_t r = fwrite(z, sizeof(z[0]), filterSize, fp2);
-    printf("wrote %zu elements out of %d requested\n", r, filterSize);
+    size_t r = fwrite(z, sizeof(z[0]), FILTER_SIZE, fp2);
+    printf("wrote %zu elements out of %d requested\n", r, FILTER_SIZE);
   }
 }
