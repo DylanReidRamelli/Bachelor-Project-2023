@@ -23,10 +23,10 @@ def read_data(image_path_original, image_path_modified, filter_path):
 
     # Visualize the data as an image
     # plt.imshow(data, cmap='gray')
-    # plt.plot(np.arange(n), data)
-    # plt.plot(np.arange(n), data_modified)
+    plt.plot(np.arange(n), data)
+    plt.stem(np.arange(n), data_modified)
     # print(filter_data)
-    plt.stem(np.arange(41), filter_data.real)
+    # plt.stem(np.arange(41), filter_data.real)
     # plt.stem(np.arange(41), phase_data)
     # plt.stem(np.arange(41), original_filter_data)
 

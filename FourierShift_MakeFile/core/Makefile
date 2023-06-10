@@ -1,4 +1,4 @@
-support ?= 41
+support ?= 11
 
 CFLAGS += -Wpedantic
 CFLAGS += -D_N_=$(support)
@@ -19,6 +19,6 @@ convolution.h : convolution.py
 	./$< $(support) header > $@
 
 clean :
-	rm -f test *.o convolution.c convolution.h
+	rm -f test *.o convolution.c convolution.h filter.raw original_signal.raw shifted_signal.raw
 
 .PHONY : clean

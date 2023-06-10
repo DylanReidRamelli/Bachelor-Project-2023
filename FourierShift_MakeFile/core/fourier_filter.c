@@ -58,7 +58,7 @@ void create_phase_shift(float complex *L, const int H_size, const float shift) {
  */
 void shift_filter(float complex *H, float complex *L, float complex *z,
                   const int H_size, const int M) {
-  float complex *Z = calloc(H_size, sizeof(float complex));
+  float complex Z[H_size];
   for (int i = 0; i < H_size; i++) {
     Z[i] = H[i] * L[i];
   }
@@ -77,7 +77,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
   // Reorder : got this
   // from:https://www.dsprelated.com/showthread/comp.dsp/20790-1.php
   // TODO: implement it myself.
-  int n2 = H_size / 2;  // half of vector length
+  int n2 = H_size / 2; // half of vector length
 
   for (int i = 0; i < n2; i++) {
     float complex tmp = z[i];
@@ -85,7 +85,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     z[i + n2] = tmp;
   }
 
-  if (H_size & 1)  // odd n, shift the rest
+  if (H_size & 1) // odd n, shift the rest
   {
     float complex tmp = z[H_size - 1];
     z[H_size - 1] = z[0];
@@ -94,6 +94,4 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     }
     z[n2 - 1] = tmp;
   }
-
-  free(Z);
 }

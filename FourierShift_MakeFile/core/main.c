@@ -17,12 +17,25 @@ int main(int argc, char *argv[]) {
   enum { FILTER_SUPPORT = _N_ };
 
   const float SHIFT = atof(argv[1]);
+  const int INT_SHIFT = (int)SHIFT;
+
+  // TODO define a way to choose which M based on the amount of fractional
+  // shift.
+
   int M = 3;
   int n = 100;
+
+  // Create simple signal, half 1's, half 0's.
   float *x = calloc(n, sizeof(float));
-  for (int i = 0; i < floor(n / 2); i++) {
+  for (int i = floor(n / 4); i < floor(n / 2); i++) {
     x[i] = 1;
   }
+  // for (int i = floor(n / 2); i < floor(n / ); i++) {
+  //   x[i] = 1;
+  // }
+
+  // Pad original signal left and right by pad_n
+  // const int pad_n = 20;
 
   // Create filter
   float complex *H = calloc(FILTER_SUPPORT, sizeof(float complex));
@@ -38,7 +51,13 @@ int main(int argc, char *argv[]) {
   dconv(x, n, z, output);
 
   // Shift by the integera part
-  const int INT_SHIFT = SHIFT % 1;
+
+  float output_int_shift[n];
+
+  for (int i = 0; i < n; i++) {
+    int n_idx = (i + INT_SHIFT) % n;
+    output_int_shift[n_idx] = output[i];
+  }
 
   FILE *fp = fopen("original_signal.raw", "wb");
   if (fp) {
@@ -48,7 +67,7 @@ int main(int argc, char *argv[]) {
 
   FILE *fp1 = fopen("shifted_signal.raw", "wb");
   if (fp1) {
-    size_t r = fwrite(output, sizeof(output[0]), n, fp1);
+    size_t r = fwrite(output_int_shift, sizeof(output_int_shift[0]), n, fp1);
     printf("wrote %zu elements out of %d requested\n", r, n);
   }
 
@@ -57,4 +76,8 @@ int main(int argc, char *argv[]) {
     size_t r = fwrite(z, sizeof(z[0]), FILTER_SUPPORT, fp2);
     printf("wrote %zu elements out of %d requested\n", r, FILTER_SUPPORT);
   }
+
+  free(H);
+  free(L);
+  free(z);
 }
