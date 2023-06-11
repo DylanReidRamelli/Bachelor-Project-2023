@@ -211,18 +211,6 @@
 	\end{equation}
 	
 	
-	Here is a small example made in python:
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.48\columnwidth]{images/box_original_n50.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/box_shifted_delta10_n50.png} \\
-		\parbox{0.48\columnwidth}{\centering Left} \hfill
-		\parbox{0.48\columnwidth}{\centering Right}
-		\caption{Original 1D function.}
-	\end{figure}
-	
-	
-	
 	The above equation \ref{shift_equation} works well for any kind of shift that we want to perform on our signal but for any fractional amount we encounter some problems with the use of the correct frequency indexes.
 	Here is a graphical example that was found to be useful: With an $N=3$ number of samples of a signal we have exactly $2$ distinct frequencies \ref{freq_equation} but the total frequencies are actually $3$ and they are $[0+i0, \frac{1}{2}+i\frac{\sqrt{3}}{2}, \frac{1}{2}-i\frac{\sqrt{3}}{2}]$. The last two frequencies are one the complex conjugate of the other.
 	
@@ -248,7 +236,7 @@
 		Z_m = H_{\text{wave}\_n(m)} \cdot G_m
 	\end{equation}	
 	
-	
+	\iffalse
 
 	
 	\begin{figure}[h]
@@ -256,7 +244,6 @@
 		\includegraphics[width=0.5\columnwidth]{images/box_shifted_delta10_1_n50.png}
 		\caption{Shifted function by $\delta=10.5$}
 	\end{figure}
-	
 	
 	\subsection{Lanczos Filter and FIR}
 	To alleviate the problems that arise when shifting a signal by a fractional amount we can use a filter $L$ that is convoluted with the shifted signal.
@@ -271,19 +258,49 @@
 	\begin{equation*}
 		Z_m = L_m \cdot H_m \cdot G_m
 	\end{equation*}
+	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.5\columnwidth]{images/box_shifted_lanczos_delta10_1_n50.png}
 		\caption{Shifted function by $\delta=10.5$ with lanczos filter applied (red), no filter(blue).}
 	\end{figure}
 	
+	\fi
 	
 	\newpage
 	
-	\section{Project Design}
-		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simply shifting a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount. We then applied the same methodology to a 2D signal, which in our case was an image. We built the 2D kernel based on the 1D one that we created before. 	
- \\
+	\section{Implementation and Project Design}
+		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount.
+		
+		So first off we need to build our kernel that will allow us to shift the signal. To do this we chose to use the Continuous Fourier transform on a sinusoid function that was defined in the frequency domain.
+		\begin{equation}
+			F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
+		\end{equation}
+		This equation allows us to define our CFT in an interval $\mathbb{M}$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations that occur with different sizes of M.
+		\begin{equation}
+			F(\omega) = \frac{2M^2\omega \sin(M\omega)}{M^2\omega^2-\pi^2}
+		\end{equation}
+		
+		Using this function we can build the following filters:
+		
+		% Filters.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.48\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/filter_m_1_5.png} \\
+			\parbox{0.48\columnwidth}{\centering Filter with M = 1.} \hfill
+			\parbox{0.48\columnwidth}{\centering Filter with M = 2.}
+			\centering
+			\includegraphics[width=0.48\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/filter_m_3.png} \\
+			\parbox{0.48\columnwidth}{\centering Filter with M = 2.} \hfill
+			\parbox{0.48\columnwidth}{\centering Filter with M = 3.}
+			\caption{Filter}
+		\end{figure}
+		%
+		
+		Now that we have our filters we can phase shift them by the fractional amount in the same way that was defined in equation \ref{shift_equation}
 	
+	
+	\iffalse
 	Explain 1D,2D,3D transposition.
 	Simplification of 2D rotation using 1D translations.
 	
@@ -308,32 +325,6 @@
 	\end{itemize}
 	
 	
-	
-	
-	\newpage
-	\begin{table}
-		\centering
-		\scriptsize \begin{tabularx}{\linewidth}{|X|X|X|X|}
-			\hline
-			Week& Activity & Duration in Weeks & Status \\ \hline
-			W1& Finish all 2D image rotations in C and start rotations with CUDA.& 1W& COMPLETED \\ \hline
-			W2& Complete 2D Rotations with CUDA and read/fully understand research article "Convolution-based Interpolation for fast, high quality Rotation of Images."& 1W &DONE. CUDA rotations are not complete for gether no loss. Need to undserstand better when you can call kernels and where.\\ \hline
-			W3&Meet and ask questions about research article,  keep learning paper. Finish gathernoloss in C, keep looking at CUDA examples. & 1W&Started summarizing the article and also a reference book about digital signal processing, which is helping a lot in understanding the article. DONE \\ \hline
-			W4& Fully implement CUDA code for gathernoloss  and fully understand article.& 1W &Able to implement CUDA coda for gathernoloss still need this week for article. DONE\\ \hline
-			W5& Plot a sinusoid function around multiple circles to create a n image to serve as test for rotations. Understand how to translate an array by a  fractional value&  1W & DONE \\ \hline
-			W6&Progress Report , start writing report, start with abstract. Continue with translate signal.&  1W & NOT DONE\\ \hline
-			W7&Start implementing interpolation using 3 pass algorithm in 2d test image& 2-3W& IN PROGRESS \\ \hline
-			W8&Continue implementing interpolation using 3 pass algorithm in 2d test image  and start looking into parallelizing the code with either MPI or CUDA&1W & CANCELLED \\ \hline
-			W9&Continue implementing interpolation using 3 pass algorithm in 2d test image & 1W & IN PROGRESS \\ \hline
-			W10&Continue implementing interpolation using 3 pass algorithm in 2d test image ... and finish report &  2-3W & IN PROGRESS\\ \hline
-			W11&Continue implementing interpolation using 3 pass algorithm in 2d test image ... and finish report&  1W & IN PROGRESS\\ \hline
-			W12&Maybe add CUDA or MPI support and finish report&  1W & IN PROGRESS\\
-			\hline
-		\end{tabularx}\caption{Plan}
-	\end{table}
-	
-	
-	\includepdf{pdf's/poster_template.pdf}
 	\section{Solution}
 	\section{Validation}
 	\section{Conclusion}
@@ -343,5 +334,7 @@
 	\end{itemize}
 	\bibliographystyle{plain}
 	\bibliography{references}
+	
+	\fi
 	
 \end{document}
