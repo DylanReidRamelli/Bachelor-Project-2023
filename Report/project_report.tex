@@ -287,21 +287,34 @@
 		% Filters.
 		\begin{figure}[h]
 			\centering
-			\includegraphics[width=0.48\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/filter_m_1_5.png} \\
-			\parbox{0.48\columnwidth}{\centering Filter with M = 1.} \hfill
-			\parbox{0.48\columnwidth}{\centering Filter with M = 2.}
+			\includegraphics[width=0.4\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_1_5.png} \\
+			\parbox{0.4\columnwidth}{\centering Filter with M = 1.} \hfill
+			\parbox{0.4\columnwidth}{\centering Filter with M = 2.}
 			\centering
-			\includegraphics[width=0.48\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.48\columnwidth]{images/filter_m_3.png} \\
-			\parbox{0.48\columnwidth}{\centering Filter with M = 2.} \hfill
-			\parbox{0.48\columnwidth}{\centering Filter with M = 3.}
+			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_3.png} \\
+			\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
+			\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
 			\caption{Filter}
 		\end{figure}
 		%
 		
+		With some experimenting we found that the filter with $M=3/2$ is a godd compromise between smoothing the values and keeping them as accurate as possible. 
+		
+		
 		Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}.
+		
+	
+
 	
 	
-	\iffalse
+	To implement the one dimentional convolution we tried the optimize the algorithm by using godbolt. We came up with a solution that creates the required convolution function at compile time that will perform better than with standard for loops: Go into detail.
+	
+	Once the fractional shift of our one dimentional signal is over we can just perform a mermory copy for the integer part of the shift.
+	
+	
+	
+	
+	\iffalse	
 	Explain 1D,2D,3D transposition.
 	Simplification of 2D rotation using 1D translations.
 	
