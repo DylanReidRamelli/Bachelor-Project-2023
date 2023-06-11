@@ -19,19 +19,22 @@ void create_filter(float complex *H, const int H_size, const int M) {
     int k = wavenum(i, H_size);
     float a = 2 * M_PI / H_size * k * M;
 
-    if (a != M_PI / M || a != -(M_PI / M)) {
+    if (a != M_PI / M) {
+      H[i] = M;
+    } else if (a != -M_PI / M) {
+      H[i] = M;
+    } else {
       H[i] += -(2 * pow(M, 2) * a * sin(M * a)) /
               (pow(M, 2) * pow(a, 2) - pow(M_PI, 2));
-    } else {
-      H[i] = pow(M, 3);
-    }
-    if (a != 0) {
-      H[i] += 2 * sin(M * a) / a;
-    } else {
-      H[i] = 2 * M;
     }
 
-    H[i] = H[i] / 2.0;
+    if (a == 0) {
+      H[i] = 2 * M;
+    } else {
+      H[i] += 2 * sin(M * a) / a;
+    }
+
+    H[i] = H[i] / (2.0 * M);
   }
 }
 
@@ -71,13 +74,12 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     }
     z[i] = X;
     z[i] = z[i] / H_size;
-    z[i] = z[i] / M;
   }
 
   // Reorder : got this
   // from:https://www.dsprelated.com/showthread/comp.dsp/20790-1.php
   // TODO: implement it myself.
-  int n2 = H_size / 2; // half of vector length
+  int n2 = H_size / 2;  // half of vector length
 
   for (int i = 0; i < n2; i++) {
     float complex tmp = z[i];
@@ -85,7 +87,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     z[i + n2] = tmp;
   }
 
-  if (H_size & 1) // odd n, shift the rest
+  if (H_size & 1)  // odd n, shift the rest
   {
     float complex tmp = z[H_size - 1];
     z[H_size - 1] = z[0];

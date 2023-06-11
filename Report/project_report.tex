@@ -272,11 +272,12 @@
 	\section{Implementation and Project Design}
 		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount.
 		
-		So first off we need to build our kernel that will allow us to shift the signal. To do this we chose to use the Continuous Fourier transform on a sinusoid function that was defined in the frequency domain.
+		So first off we need to build our kernel that willl have a shift applied to it according to the fractional part of the shift value. This can be done with simple for loop and in serial since the kernel size will be minimal and the only computationally intensive part would be theIinverse Fourier Transform. 
+		To start of we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
 		\begin{equation}
 			F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
 		\end{equation}
-		This equation allows us to define our CFT in an interval $\mathbb{M}$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations that occur with different sizes of M.
+		This equation allows us to define our CFT in an interval $\mathbb{M}$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations and smoothing that occur with different sizes of M.
 		\begin{equation}
 			F(\omega) = \frac{2M^2\omega \sin(M\omega)}{M^2\omega^2-\pi^2}
 		\end{equation}
@@ -297,7 +298,7 @@
 		\end{figure}
 		%
 		
-		Now that we have our filters we can phase shift them by the fractional amount in the same way that was defined in equation \ref{shift_equation}
+		Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}.
 	
 	
 	\iffalse
