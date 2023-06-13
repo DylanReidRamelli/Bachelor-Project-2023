@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-def read_data(image_path_original, image_path_modified, filter_path):
+def read_data(image_path_original, image_path_modified, filter_path, shift):
     # nx = 256
     # ny = 256
 
@@ -25,6 +25,8 @@ def read_data(image_path_original, image_path_modified, filter_path):
     # Visualize the data as an image
     # plt.imshow(data, cmap='gray')
     plt.plot(np.arange(n + 10), data, color='red')
+    plt.plot([(n/4)+ float(shift), (n/4) + float(shift)], [0, 1], color='green', linewidth=4)
+    plt.plot([(n/2)+ float(shift), (n/2) + float(shift)], [0, 1], color='green', linewidth=4)
     plt.stem(np.arange(n), data_modified)
     # print(filter_data)
     # plt.stem(np.arange(30), filter_data.real)
@@ -36,4 +38,5 @@ def read_data(image_path_original, image_path_modified, filter_path):
 
 
 if __name__ == "__main__":
-	read_data("../core/original_signal.raw", "../core/shifted_signal.raw", "../core/filter.raw")
+    shift = sys.argv[1]
+    read_data("../core/original_signal.raw", "../core/shifted_signal.raw", "../core/filter.raw", shift)

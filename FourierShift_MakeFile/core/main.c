@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "convolution.h"
 #include "fourier_filter.h"
@@ -32,12 +33,6 @@ int main(int argc, char *argv[]) {
        i < floor(n / 2) + (FILTER_SUPPORT / 2); i++) {
     x[i] = 1;
   }
-  // for (int i = floor(n / 2); i < floor(n / ); i++) {
-  //   x[i] = 1;
-  // }
-
-  // Pad original signal left and right by pad_n
-  // const int pad_n = 20;
 
   // Create filter
   float complex *H = calloc(FILTER_SUPPORT, sizeof(float complex));
@@ -50,23 +45,26 @@ int main(int argc, char *argv[]) {
   shift_filter(H, L, z, FILTER_SUPPORT, M);
 
   float output[n];
-  float output_int_shift[n];
+  float *output_int_shift = calloc(n, sizeof(float));
 
   if (SHIFT - INT_SHIFT != 0) {
     dconv(x, n, z, output);
-    for (int i = 0; i < n; i++) {
-      int n_idx = (i + INT_SHIFT) % n;
-      output_int_shift[n_idx] = output[i];
-    }
+    // for (int i = 0; i < n; i++) {
+    //   int n_idx = (i + INT_SHIFT + n) % n;
+    //   output_int_shift[n_idx] = output[i];
+    // }
   } else {
+
+    // memmove(&output_int_shift[0], &x[0], s)
+    memcpy(&output_int_shift[INT_SHIFT], &x[0], n - INT_SHIFT);
     for (int i = 0; i < n; i++) {
-      int n_idx = (i + INT_SHIFT) % n;
-      output_int_shift[n_idx] = x[i];
+      printf("%f\n", output_int_shift[i]);
+      //   int n_idx = (i + INT_SHIFT + n) % n;
+      //   output_int_shift[n_idx] = x[i];
     }
   }
 
-  // Shift by the integera part
-
+  // Shift by the integral part
   FILE *fp = fopen("original_signal.raw", "wb");
   if (fp) {
     size_t r = fwrite(x, sizeof(x[0]), n_extended, fp);
