@@ -11,6 +11,7 @@ def read_data(image_path_original, image_path_modified, filter_path):
     data = np.fromfile(image_path_original, dtype=np.single)
     data_modified = np.fromfile(image_path_modified, dtype=np.single)
     filter_data = np.fromfile(filter_path, dtype=np.csingle)
+    # original_filter_data = np.fromfile(original_filter_path, dtype=np.csingle)
     n = 100
     # data = np.reshape(data, (ny, nx))
 
@@ -23,12 +24,12 @@ def read_data(image_path_original, image_path_modified, filter_path):
 
     # Visualize the data as an image
     # plt.imshow(data, cmap='gray')
-    plt.plot(np.arange(n), data)
+    plt.plot(np.arange(n + 10), data, color='red')
     plt.stem(np.arange(n), data_modified)
     # print(filter_data)
-    # plt.stem(np.arange(41), filter_data.real)
-    # plt.stem(np.arange(41), phase_data)
-    # plt.stem(np.arange(41), original_filter_data)
+    # plt.stem(np.arange(30), filter_data.real)
+    # plt.stem(np.arange(20), phase_data)
+    # plt.stem(np.arange(20), original_filter_data)
 
     plt.show()
     # plt.savefig("gather_loss.png")

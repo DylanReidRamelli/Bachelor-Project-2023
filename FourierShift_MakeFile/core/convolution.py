@@ -12,16 +12,15 @@ if len(sys.argv) == 2:
 	out_param = 'float * out)'
 
 	head = ' #include<complex.h> \n#include <stddef.h>\n #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))\n#define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))\nstatic void kconv('+ in_param + n_param + weights_param + out_param 
-	top_body = r'''{ for(int i = 0; i < n ; ++i)
+	top_body = r''' {for(int i = 0; i < n ; ++i)
 	    {'''
 
 	body_params = ''
 	for i in range(size - 1):
 		body_params += 'w['+ str(i) +']* in0[i + '+ str(i) +'] +\n'
-	body = '{out[i] = \n'
+	body = 'out[i] = \n'
 	end = r'''w['''+ str(size-1) + '''] * in0[i + ''' +str(size-1)+'''] ;
 	    	}
-		}
 	}'''
 
 	code_1 = head + top_body+ body + body_params + end

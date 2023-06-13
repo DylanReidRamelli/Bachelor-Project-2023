@@ -1,7 +1,8 @@
-support ?= 11
+support?= 10
 
 CFLAGS += -Wpedantic
 CFLAGS += -D_N_=$(support)
+CFLAGS += -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -g
 
 # -lm to link the math libraries.
 LDFLAGS += -lm

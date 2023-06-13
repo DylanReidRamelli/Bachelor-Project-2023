@@ -11,7 +11,7 @@ int wavenum(const int i, const int n);
  * @param H_size, size of input array.
  * @param M, Size of integral.
  */
-void create_filter(float complex *H, const int H_size, const int M);
+void create_filter(float complex *H, const int H_size, const float M);
 
 /**
  * @param L, input array for store the phase shift.

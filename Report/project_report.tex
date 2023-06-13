@@ -272,12 +272,12 @@
 	\section{Implementation and Project Design}
 		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount.
 		
-		So first off we need to build our kernel that willl have a shift applied to it according to the fractional part of the shift value. This can be done with simple for loop and in serial since the kernel size will be minimal and the only computationally intensive part would be theIinverse Fourier Transform. 
+		So first off we need to build our kernel that will have a shift applied to it according to the fractional part of the shift value. This can be done with simple for loop and in serial since the kernel size will be minimal and the only computationally intensive part would be the Inverse Fourier Transform. 
 		To start of we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
 		\begin{equation}
 			F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
 		\end{equation}
-		This equation allows us to define our CFT in an interval $\mathbb{M}$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations and smoothing that occur with different sizes of M.
+		This equation allows us to define our CFT in an interval $M$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations and smoothing that occur with different sizes of M.
 		\begin{equation}
 			F(\omega) = \frac{2M^2\omega \sin(M\omega)}{M^2\omega^2-\pi^2}
 		\end{equation}
@@ -295,21 +295,44 @@
 			\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
 			\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
 			\caption{Filter}
+			\label{filters}
 		\end{figure}
 		%
 		
-		With some experimenting we found that the filter with $M=3/2$ is a godd compromise between smoothing the values and keeping them as accurate as possible. 
+		For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simplex expression that defines M as:
+		\begin{equation*}
+			M = 
+			\begin{cases}
+				1.5 & if 0.1 < x < 0.3\\
+				2 & if 0.3 < x < 0.5
+			\end{cases}
+		\end{equation*}
+				
+		With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible. for any fractional shift. 
+		
+	
+		Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}. If for example we want to shift our original signal by $10.45$ we will start by creating our filter with $M=\frac{3}{2}$. Then we will apply a shift of $.45$ to the filter:
 		
 		
-		Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_2_shift.png} \\
+			\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
+			\parbox{0.4\columnwidth}{\centering Filter with M = 2 after shift of $0.45$.}
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/inverse_filter_m_2_shift.png} \\
+			\parbox{0.4\columnwidth}{\centering Filter with M = 2 in time domain.}\hfill
+			\caption{Filter}
+			\label{shift}
+		\end{figure}
 		
 	
-
 	
+	To implement the one dimensional convolution we tried the optimize the algorithm by using godbolt. We came up with a solution that creates the required convolution function at compile time that will perform better than with standard for loops: Go into detail.
 	
-	To implement the one dimentional convolution we tried the optimize the algorithm by using godbolt. We came up with a solution that creates the required convolution function at compile time that will perform better than with standard for loops: Go into detail.
+	Once the fractional shift of our one dimensional signal is over we can just perform a memory copy for the integer part of the shift.
 	
-	Once the fractional shift of our one dimentional signal is over we can just perform a mermory copy for the integer part of the shift.
 	
 	
 	
@@ -346,9 +369,9 @@
 		\item Summary
 		\item limitations
 	\end{itemize}
+		\fi
 	\bibliographystyle{plain}
 	\bibliography{references}
 	
-	\fi
 	
 \end{document}

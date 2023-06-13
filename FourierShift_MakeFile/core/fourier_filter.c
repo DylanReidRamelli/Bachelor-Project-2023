@@ -14,19 +14,22 @@ int wavenum(const int i, const int n) { return (i + n / 2) % n - n / 2; }
  * @param H_size, size of input array.
  * @param M, Size of integral.
  */
-void create_filter(float complex *H, const int H_size, const int M) {
+void create_filter(float complex *H, const int H_size, const float M) {
   for (int i = 0; i < H_size; i++) {
     int k = wavenum(i, H_size);
     float a = 2 * M_PI / H_size * k * M;
 
-    if (a != M_PI / M) {
+    // printf("%f\n", a);
+
+    if (a == M_PI / M) {
       H[i] = M;
-    } else if (a != -M_PI / M) {
+    } else if (a == -M_PI / M) {
       H[i] = M;
     } else {
       H[i] += -(2 * pow(M, 2) * a * sin(M * a)) /
               (pow(M, 2) * pow(a, 2) - pow(M_PI, 2));
     }
+    // printf("%.2f %+.2fi\n", creal(H[i]), cimag(H[i]));
 
     if (a == 0) {
       H[i] = 2 * M;
@@ -44,9 +47,8 @@ void create_filter(float complex *H, const int H_size, const int M) {
  * @param shift, amount to shift.
  */
 void create_phase_shift(float complex *L, const int H_size, const float shift) {
-  float delta = remainder(shift, 1.0);
   for (int i = 0; i < H_size; i++) {
-    L[i] = cexp(-2 * I * M_PI * delta * wavenum(i, H_size) / H_size);
+    L[i] = cexp(-2 * I * M_PI * shift * wavenum(i, H_size) / H_size);
   }
 }
 
@@ -79,7 +81,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
   // Reorder : got this
   // from:https://www.dsprelated.com/showthread/comp.dsp/20790-1.php
   // TODO: implement it myself.
-  int n2 = H_size / 2;  // half of vector length
+  int n2 = H_size / 2; // half of vector length
 
   for (int i = 0; i < n2; i++) {
     float complex tmp = z[i];
@@ -87,7 +89,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     z[i + n2] = tmp;
   }
 
-  if (H_size & 1)  // odd n, shift the rest
+  if (H_size & 1) // odd n, shift the rest
   {
     float complex tmp = z[H_size - 1];
     z[H_size - 1] = z[0];
