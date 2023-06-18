@@ -7,6 +7,7 @@
 \usepackage{tabularx}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{imakeidx}
 
 
 %opening
@@ -24,22 +25,38 @@
 \end{committee}
 
 \abstract {
+	The idea of rotating an image might seem a trivial thing and until the work on this project began it was thought so as well. It became clear that rotation is a multi faceted operation that involves different steps. First we must acquire the image and to do that we must be able to sense it. Just like a robot arm in an assembly line needs to know which parts of the car go where, we must be able to take a discrete sample from a continuous signal. Once the image is acquired we need tools that are as accurate as possible and immune to disturbances to be able to perform accurate rotations on the image. This project, which is based on a research paper on rotating images using a convolution based interpolation \cite{main_article} will try to explore a similar way to rotate an image while maintaining a high degree of accuracy and performance. To do this the Fourier Transform's property of shift and of convolution of a signal with a filter kernel will be taken advantage of. What will also be shown is how the filter kernel was created in the frequency domain and the problems that the choice of filter might pose to the result of the shift.
 	
 }
 
 \begin{document}
 	
-	\maketitle	
+	\maketitle
+		
+		
+	\tableofcontents
+	\newpage
 	\section{Introduction, Motivation}\label{introduction}
-	For many years the amount of digital imaging data has been increasing exponentially (citation) and as such the need for acquiring this large data and process it with care has become a central point of focus. The goal of this project is to process high quality signals, in this case images, by rotating them using techniques such as the Fourier Transform, Shift Theorem, FIR filtering and CUDA parallel processing.
-	The accurate rotation of images is very useful in many applications such as Data Augmentation for example. For Data augmentation we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally. 
 	
+	% Intro
+	For many years the amount of digital imaging data has been increasing exponentially (citation) and as such the need for acquiring this large data and process it with care has become a central point of focus. The goal of this project is to process high quality signals, in this case images, by rotating them using techniques such as the Fourier Transform, Shift Theorem, FIR filtering and CUDA parallel processing.
+	
+	
+	%Motivations
+	
+	
+	
+	
+	The accurate rotation of images is very useful in many applications such as Data Augmentation for example. For Data augmentation we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally.
 	Another application of this technique can be seen in Data Visualization for multi-modal imaging. Images are taken at different times or in different ways, such as in a PET-CT scan and rotation can enable us to re-align the elements present in these images. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly. Go into more detail.. ask Diego.
+	
+	
+	
 	
 
 	
 	\section{State of the art}
-	For certain applications such as... it is required to be able to rotate images while maintaining the highest quality possible. To achieve satisfying results the general approach is to use bilinear and nearest neighbour interpolation.
+	For certain applications such as... it is required to be able to rotate images while maintaining the highest quality possible. To achieve satisfying results the general approach is to use bi-linear and nearest neighbor interpolation.
 	
 	
 	Include images from Diego of blood vessels in the heart iI think
@@ -125,40 +142,21 @@
 	\end{equation*} 
 	
 	The first matrix shears the image in the $x$ direction by $\Delta_x = -y\cdot tan(\theta/2)$, the second matrix shears the image in the $y$ direction by $\Delta_y = x \cdot sin(\theta)$ and the last matrix shears the image again in the $x$ direction by $\Delta_x$.
-	In our case we can represent the image as a one dimensional array ordered row-wise and as such can be thought of as a one dimensional signal. This allows us to shift the array using simple memcpy operations and fractional shifts of the signal by the convolution with a small kernel.
-	
-	\subsection{Fourier domain}
+	In our case we can represent the image as a one dimensional array ordered row-wise. 
 		
-	\subsection{Frequencies of a signal}
+	\subsection{Fourier Transform}
+	The Fourier transform of a function $g(x)$ is defined as follows:
 	\begin{equation}
-		freq_{n} = \lfloor \frac{n}{2} \rfloor + 1 \label{freq_equation}
-	\end{equation}
-	Visual representation with $n=3$ of the discrete Fourier transform of a function $g(x)$
-	
-	\begin{equation*}
 		G_m = \displaystyle\sum_{k=0}^{N-1}g(k)e^{-i \frac{2\pi}{N}km}
-	\end{equation*}
+	\end{equation}
+	
+
+	
 	
 	To shift a signal by a fractional amount it is imperative to use the correct frequency when doing so.
 	
 	Given that for $n$ samples we have $\lfloor \frac{n}{2} \rfloor + 1$ distinct frequencies
 	
-	
-	\begin{figure}
-		\centering
-		\include{file}
-		\caption{Unit circle with N = 3, }
-	\end{figure}
-	
-	Euler's Formula
-	\begin{equation}
-		e^{ix} = cos(x)  + i sin(x)
-	\end{equation}
-	
-	Useful property:
-	\begin{equation}
-		\cos(w)= \frac{1}{2}(e^{iw}+ e^{-iw})
-	\end{equation}
 	
 	
 	\subsection{Fourier Transform with Shift Theorem}
@@ -209,6 +207,8 @@
 	The above equation \ref{shift_equation} works well for any kind of shift that we want to perform on our signal but for any fractional amount we encounter some problems with the use of the correct frequency indexes.
 	Here is a graphical example that was found to be useful: With an $N=3$ number of samples of a signal we have exactly $2$ distinct frequencies \ref{freq_equation} but the total frequencies are actually $3$ and they are $[0+i0, \frac{1}{2}+i\frac{\sqrt{3}}{2}, \frac{1}{2}-i\frac{\sqrt{3}}{2}]$. The last two frequencies are one the complex conjugate of the other.
 	
+	
+	
 	"Explain why".\\
 	To solve this we need to take into consideration the negative frequencies and in particular if the number of samples is odd or even.
 	Normally we multiply each sample by its corresponding phase, which is based on the frequency number $m$
@@ -234,7 +234,7 @@
 	
 	
 	\subsection{Filter}
-	To start of we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
+	To start off we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
 	\begin{equation}
 		F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
 	\end{equation}
@@ -308,13 +308,12 @@
 	\newpage
 	
 	\section{Implementation and Project Design}
-		The project was mainly done with just a few tools such as: MakeFile, CMake, Jupyter Notebook and some built-in libraries of C and Python like numpy and matplotlib.
 		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount. This is where some problems arose because some care is needed while shifting each frequency by the correct phase shift.
-		
+		The complete the project the tools that were used were mainly: MakeFile, CMake, Jupyter Notebook and some built-in libraries of C and Python like numpy and matplotlib.
 		
 	\subsection{Libraries}
-		Numpy and Matplotlib were a huge help in plotting the results of our initial tests of the Foruier Transform and of the final results as well. Even for code that was written in C we would then output the binary result to a file and then read that file in python to use matplotlib ton plot the result. There are a few plotting libraries for C but we felt that this was just the faster solution.
-		The whole project started out as a CMake and this was chosen mainly because I was already familiar with this tool and was able to quickly setup an environment that would easily build the executables. However towards the end we decided to just use a plain Makefile to keep everything nice and simple.
+		Numpy and Matplotlib were a huge help in plotting the results of our initial tests of the Fourier Transform and of the final results. These libraries were also useful for when we started writing code in C. Where we would output the binary result to a file and then read it and plot the result in python. There are a few plotting libraries for C but we felt that this was just the faster/easier solution.
+		The whole project started out as a CMake and this was chosen mainly because I was already familiar with this tool and was able to quickly setup an environment that would build the executable. However towards the end we decided to just use a plain Makefile to keep everything nice and simple.
 		
 		\subsection{Creating a Filter in the Frequency domain}
 		So first off we need to build our kernel. As an example we will create one of size $40$ with $M=2$ since we will be shifting by a fractional amount. To create the kernel then we follow equation \ref{filter_formula}, while also paying attention to evaluating the limit when $\omega=\frac{\pi}{M}$ or $\omega=-\frac{\pi}{M}$. This gives us:
@@ -335,7 +334,7 @@
 			\label{shifted_filter}
 		\end{figure}
 		
-		 Afterwards we implmented a simple version of the inverse fourier transform, which give us our signal in the time domain. Before returning the result however we need to perform the equivalent of numpy's fftshift function to have the filter values centered. This whole operation can be done in serial and with no real optimization of the code since the kernel size will always be much smaller than the input signal and as such will no be computationally expensive.
+		 Afterwards we implemented a simple version of the inverse Fourier transform, which give us our signal in the time domain. Before returning the result however we need to perform the equivalent of numpy's fftshift function to have the filter values centered. This whole operation can be done in serial and with no real optimization of the code since the kernel size will always be much smaller than the input signal and as such will no be computationally expensive.
 		 \begin{figure}[h]
 		 	\centering
 		 	\includegraphics[width=0.4\columnwidth]{images/ifft_filter_m_2_25_shift.png}
@@ -345,14 +344,14 @@
 		 
 		 
 		
-		Here is some pseudo-code that exaplain what is being done to our original filter:
+		Here is some pseudo-code that explain what is being done to our original filter:
 		\begin{algorithm}
 			\caption{Filter shift}\label{alg:cap}
 		\end{algorithm}
 		
 		
 		\subsection{Convolution Implementation}
-		To keep our one dimensional convolution as simple and as efficient as possible we analized it using a Web tool called "Compiler Explorer"\cite{godbolt}. This tool allows us to see which assembly code is being used to perform the convolution operation and choose which implementation should run faster on certain compilers and CPU's.
+		To keep our one dimensional convolution as simple and as efficient as possible we analyzed it using a Web tool called "Compiler Explorer"\cite{godbolt}. This tool allows us to see which assembly code is being used to perform the convolution operation and choose which implementation should run faster on certain compilers and CPU's.
 		
 		
 		
@@ -364,57 +363,76 @@
 		
 		\section{Results}
 		\subsection{Results with 1D signals.}
+		Let us take as starting signal:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/original_signal.png}
+			\caption{Original signal of size $n=100$ samples.}
+			\label{original_signal}
+		\end{figure}
+		
+		These are the results of shifting the signal by 20.25 for $M=\{1,\frac{3}{2},2,3\}$:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_1.png}\hspace*{0.2\columnwidth}
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_3_2.png}\\
+			\parbox{0.3\columnwidth}{\centering Filter with M = 1.}\hspace*{0.2\columnwidth}
+			\parbox{0.3\columnwidth}{\centering Filter with M = 3/2}\\
+			\centering
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_2.png}\hspace*{0.2\columnwidth}
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_3.png} \\
+			\parbox{0.3\columnwidth}{\centering Filter with M = 2.}\hspace*{0.2\columnwidth}
+			\parbox{0.3\columnwidth}{\centering Filter with M = 3.}
+			\caption{Shift by 20.25}
+			\label{results_1}
+		\end{figure}
+		
+		At first glance we can see that with $M=1$ we have too many oscillations present in the resulting signal and with $M=3$ the signal is smoothed out too much. We can see though that if we set $M=1$ and the fractional value is small, for example $0.01$ we have less oscillations and the signal is more similar to the original.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_small_shift.png}
+			\caption{Shift by $20.01$ with $M=1$}
+			\label{small_shift_M_1}
+		\end{figure}
+		
+		This is because the there are less oscillations in the kernel after the phase shift for small fractional shifts. In this case:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_filter_small_shift.png}
+			\caption{Filter shifted by $0.01$ with $M=1$}
+			\label{small_shift_M_1_filter}
+		\end{figure}
+		
+		We have maximum oscillations exactly at $0.5$ and with $M=1$:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_filter_big_shift.png}
+			\caption{Filter shifted by $0.5$ with $M=1$}
+			\label{big_shift_M_1_filter}
+		\end{figure}
+		
+		This is why for a fractional shift that get closer to $0.5$ it is necessary to use a bigger value for M such as $\frac{3}{2}$ or $2$ to smooth out the oscillations:
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.4\columnwidth]{images/Results/M_2_filter_big_shift.png}
+			\caption{Filter shifted by $0.5$ with $M=2$}
+			\label{big_shift_M_2_filter}
+		\end{figure}
+		
+		
+		Here we could add a part where we show a simple implementation of choosing the right M for the corresponding amount of fractional shift by looking at which one preserves best the filter
+		
+		
 		\subsection{Results on 2D signals, i.e images}
 		
 		
 		\section{Conclusion}
 		
 		\section{Future works}
-		
-		
+		One way to improve upon this work would be to implement the code with CUDA
 	
 	
-	To implement the one dimensional convolution we tried the optimize the algorithm by using godbolt. We came up with a solution that creates the required convolution function at compile time that will perform better than with standard for loops: Go into detail.
-	
-	Once the fractional shift of our one dimensional signal is over we can just perform a memory copy for the integer part of the shift.
-	
-	
-	
-	
-	
-	\iffalse	
-	Explain 1D,2D,3D transposition.
-	Simplification of 2D rotation using 1D translations.
-	
-	Bottom-up , start with 1d kernel then build 2d kernels starting from 1d.
-	
-
-	\section{Implementation}
-	\begin{itemize}
-		\item Problems while implementing the code
-		\item Indexing frequencies...
-		\item practical problems...
-	\end{itemize}
-	
-	\section{Result}
-	
-	
-	\begin{itemize}
-		\item Rotate image many times like in the paper
-		\item look for artefacts
-		\item compare with C code gathernoloss.c
-		\item quality, quantity
-	\end{itemize}
-	
-	
-	\section{Solution}
-	\section{Validation}
-	\section{Conclusion}
-	\begin{itemize}
-		\item Summary
-		\item limitations
-	\end{itemize}
-		\fi
 	\bibliographystyle{plain}
 	\bibliography{references}
 	
