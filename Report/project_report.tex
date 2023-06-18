@@ -5,7 +5,8 @@
 \captionsetup{labelfont={bf}}
 \usepackage[]{pdfpages}
 \usepackage{tabularx}
-
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 
 %opening
@@ -90,7 +91,8 @@
 	
 
 	\section{Methodology}	
-		In this project we will use the same method to rotate an image as in the original paper \cite{main_article} except we will be creating our own convolution kernel in the frequency domain by using a cosine function as base. Defining the function in the Fourier space allows us to fine tune the filter to have a better control over the smoothing effect that will occur when we shift by fractional amounts. Since the kernel will be small we will also just use a normal Inverse Fourier Transform instead of a IFFT. In the article that this project takes inspiration it is shown that the traditional rotation matrix
+		In this project we will use the same method to rotate an image as in the original paper \cite{main_article} except we will be creating our own convolution kernel in the frequency domain by using a cosine function as base. Defining the function in the Fourier space allows us to fine tune the filter to have a better control over the smoothing effect that will occur when we shift by fractional amounts. Since the kernel will be small we will also just use a normal Inverse Fourier Transform instead of a IFFT. \\
+		In the article that this project takes inspiration from it is shown that the traditional rotation matrix
 	\begin{equation*}
 		R(\theta) = 
 		\begin{pmatrix}
@@ -125,6 +127,8 @@
 	The first matrix shears the image in the $x$ direction by $\Delta_x = -y\cdot tan(\theta/2)$, the second matrix shears the image in the $y$ direction by $\Delta_y = x \cdot sin(\theta)$ and the last matrix shears the image again in the $x$ direction by $\Delta_x$.
 	In our case we can represent the image as a one dimensional array ordered row-wise and as such can be thought of as a one dimensional signal. This allows us to shift the array using simple memcpy operations and fractional shifts of the signal by the convolution with a small kernel.
 	
+	\subsection{Fourier domain}
+		
 	\subsection{Frequencies of a signal}
 	\begin{equation}
 		freq_{n} = \lfloor \frac{n}{2} \rfloor + 1 \label{freq_equation}
@@ -223,9 +227,52 @@
 		H_m = e^{-i \frac{2\pi}{N}  \delta \text{wave}\_n(m)}
 	\end{equation*}
 	
-	\begin{equation}
+	\begin{equation}\label{phase_shift_equation}
 		Z_m = H_{\text{wave}\_n(m)} \cdot G_m
 	\end{equation}	
+	
+	
+	
+	\subsection{Filter}
+	To start of we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
+	\begin{equation}
+		F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
+	\end{equation}
+	This equation allows us to define our CFT in an interval $M$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations and smoothing that occur with different sizes of M.
+	\begin{equation}\label{filter_formula}
+		F(\omega) = \frac{2M^2\omega \sin(M\omega)}{M^2\omega^2-\pi^2}
+	\end{equation}
+	
+	Using this function we can build the following filters:
+	
+	% Filters.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_1_5.png} \\
+		\parbox{0.4\columnwidth}{\centering Filter with M = 1.} \hfill
+		\parbox{0.4\columnwidth}{\centering Filter with M = 2.}
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_3.png} \\
+		\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
+		\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
+		\caption{Filter}
+		\label{filters}
+	\end{figure}
+	%
+	
+	For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simplex expression that defines M as:
+	\begin{equation*}
+		M = 
+		\begin{cases}
+			1.5 & if 0.1 < x < 0.3\\
+			2 & if 0.3 < x < 0.5
+		\end{cases}
+	\end{equation*}
+	
+	With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible. for any fractional shift. 
+	
+	
+	Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}. If for example we want to shift our original signal by $10.45$ we will start by creating our filter with $M=\frac{3}{2}$. Then we will apply a shift of $.45$ to the filter:
 	
 	\iffalse
 
@@ -261,62 +308,68 @@
 	\newpage
 	
 	\section{Implementation and Project Design}
-		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount.
+		The project was mainly done with just a few tools such as: MakeFile, CMake, Jupyter Notebook and some built-in libraries of C and Python like numpy and matplotlib.
+		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount. This is where some problems arose because some care is needed while shifting each frequency by the correct phase shift.
 		
-		So first off we need to build our kernel that will have a shift applied to it according to the fractional part of the shift value. This can be done with simple for loop and in serial since the kernel size will be minimal and the only computationally intensive part would be the Inverse Fourier Transform. 
-		To start of we create the kernel by defining it in the Frequency domain with the use of the Continuous Fourier transform on a sinusoid function.
-		\begin{equation}
-			F(\omega) = \int_{-M}^{M} \cos(\frac{\pi}{M}t)\mathrm{e}^{-\mathrm{i}\omega t},\mathrm{d}t
-		\end{equation}
-		This equation allows us to define our CFT in an interval $M$, that we choose based on the fractional amount we want to shift, as to alleviate the oscillations and smoothing that occur with different sizes of M.
-		\begin{equation}
-			F(\omega) = \frac{2M^2\omega \sin(M\omega)}{M^2\omega^2-\pi^2}
-		\end{equation}
 		
-		Using this function we can build the following filters:
+	\subsection{Libraries}
+		Numpy and Matplotlib were a huge help in plotting the results of our initial tests of the Foruier Transform and of the final results as well. Even for code that was written in C we would then output the binary result to a file and then read that file in python to use matplotlib ton plot the result. There are a few plotting libraries for C but we felt that this was just the faster solution.
+		The whole project started out as a CMake and this was chosen mainly because I was already familiar with this tool and was able to quickly setup an environment that would easily build the executables. However towards the end we decided to just use a plain Makefile to keep everything nice and simple.
 		
-		% Filters.
+		\subsection{Creating a Filter in the Frequency domain}
+		So first off we need to build our kernel. As an example we will create one of size $40$ with $M=2$ since we will be shifting by a fractional amount. To create the kernel then we follow equation \ref{filter_formula}, while also paying attention to evaluating the limit when $\omega=\frac{\pi}{M}$ or $\omega=-\frac{\pi}{M}$. This gives us:
 		\begin{figure}[h]
 			\centering
-			\includegraphics[width=0.4\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_1_5.png} \\
-			\parbox{0.4\columnwidth}{\centering Filter with M = 1.} \hfill
-			\parbox{0.4\columnwidth}{\centering Filter with M = 2.}
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_3.png} \\
-			\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
-			\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
-			\caption{Filter}
-			\label{filters}
+			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png}
+			\caption{Filter with $M=2$}
+			\label{original_filter}
 		\end{figure}
-		%
-		
-		For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simplex expression that defines M as:
-		\begin{equation*}
-			M = 
-			\begin{cases}
-				1.5 & if 0.1 < x < 0.3\\
-				2 & if 0.3 < x < 0.5
-			\end{cases}
-		\end{equation*}
-				
-		With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible. for any fractional shift. 
-		
-	
-		Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}. If for example we want to shift our original signal by $10.45$ we will start by creating our filter with $M=\frac{3}{2}$. Then we will apply a shift of $.45$ to the filter:
 		
 		
 		
+		Now let us say that the fractional amount to shift is $0.25$. To implement this we can use a simple for loop that multiplies each frequency value of the filter by it's corresponding shift \ref{phase_shift_equation}.
 		\begin{figure}[h]
 			\centering
-			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_2_shift.png} \\
-			\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
-			\parbox{0.4\columnwidth}{\centering Filter with M = 2 after shift of $0.45$.}
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/inverse_filter_m_2_shift.png} \\
-			\parbox{0.4\columnwidth}{\centering Filter with M = 2 in time domain.}\hfill
-			\caption{Filter}
-			\label{shift}
+			\includegraphics[width=0.4\columnwidth]{images/filter_m_2_25_shift.png}
+			\caption{Filter with $M=2$ after shift of $0.25$}
+			\label{shifted_filter}
 		\end{figure}
+		
+		 Afterwards we implmented a simple version of the inverse fourier transform, which give us our signal in the time domain. Before returning the result however we need to perform the equivalent of numpy's fftshift function to have the filter values centered. This whole operation can be done in serial and with no real optimization of the code since the kernel size will always be much smaller than the input signal and as such will no be computationally expensive.
+		 \begin{figure}[h]
+		 	\centering
+		 	\includegraphics[width=0.4\columnwidth]{images/ifft_filter_m_2_25_shift.png}
+		 	\caption{Filter with $M=2$ in spatial domain.}
+		 	\label{final_filter}
+		 \end{figure}
+		 
+		 
+		
+		Here is some pseudo-code that exaplain what is being done to our original filter:
+		\begin{algorithm}
+			\caption{Filter shift}\label{alg:cap}
+		\end{algorithm}
+		
+		
+		\subsection{Convolution Implementation}
+		To keep our one dimensional convolution as simple and as efficient as possible we analized it using a Web tool called "Compiler Explorer"\cite{godbolt}. This tool allows us to see which assembly code is being used to perform the convolution operation and choose which implementation should run faster on certain compilers and CPU's.
+		
+		
+		
+		\subsection{Integer Shift}
+		The end goal has always been to shift by any real value so now we need to handle the integer part of the shift. First of all we need to clarify that if the shift does not have a fractional part then we skip all of the filter creation and convolution and just follow the simple operation that is defined here.
+		To shift a signal by an integer amount we will be using the C function \textsl{memcpy} to copy the values of the original array to a resulting array but at a different position, which is defined by the integer shift.
+		
+		
+		
+		\section{Results}
+		\subsection{Results with 1D signals.}
+		\subsection{Results on 2D signals, i.e images}
+		
+		
+		\section{Conclusion}
+		
+		\section{Future works}
 		
 		
 	
