@@ -8,4 +8,8 @@ IEEE Philippe~Thévenaz Michel~Unser, Senior~Member and Leonid Yaroslavsky.
 \newblock Convolution-based interpolation for fast, high-quality rotation of
   images.
 
+\bibitem{image_book}
+Richard E.~Woods Rafael C.~Gonzalez.
+\newblock {\em Digital Image Processing}.
+
 \end{thebibliography}

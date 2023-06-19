@@ -28,9 +28,8 @@ int main(int argc, char *argv[]) {
   int n_extended = n + FILTER_SUPPORT;
 
   // Create simple signal, half 1's, half 0's.
-  float *x = calloc(n_extended, sizeof(float));
-  for (int i = floor(n / 4) + (FILTER_SUPPORT / 2);
-       i < floor(n / 2) + (FILTER_SUPPORT / 2); i++) {
+  float *x = calloc(n, sizeof(float));
+  for (int i = 0; i < floor(n / 2); i++) {
     x[i] = 1;
   }
 
@@ -49,26 +48,20 @@ int main(int argc, char *argv[]) {
 
   if (SHIFT - INT_SHIFT != 0) {
     dconv(x, n, z, output);
-    // for (int i = 0; i < n; i++) {
-    //   int n_idx = (i + INT_SHIFT + n) % n;
-    //   output_int_shift[n_idx] = output[i];
-    // }
   } else {
-
-    // memmove(&output_int_shift[0], &x[0], s)
-    memcpy(&output_int_shift[INT_SHIFT], &x[0], n - INT_SHIFT);
-    for (int i = 0; i < n; i++) {
-      printf("%f\n", output_int_shift[i]);
-      //   int n_idx = (i + INT_SHIFT + n) % n;
-      //   output_int_shift[n_idx] = x[i];
+    if (INT_SHIFT > 0) {
+      memcpy(output_int_shift + INT_SHIFT, x, sizeof(float) * (n - INT_SHIFT));
+    } else {
+      memcpy(output_int_shift, x + abs(INT_SHIFT),
+             sizeof(float) * (n - abs(INT_SHIFT)));
     }
   }
 
   // Shift by the integral part
   FILE *fp = fopen("original_signal.raw", "wb");
   if (fp) {
-    size_t r = fwrite(x, sizeof(x[0]), n_extended, fp);
-    printf("wrote %zu elements out of %d requested\n", r, n_extended);
+    size_t r = fwrite(x, sizeof(x[0]), n, fp);
+    printf("wrote %zu elements out of %d requested\n", r, n);
   }
 
   FILE *fp1 = fopen("shifted_signal.raw", "wb");
@@ -83,6 +76,7 @@ int main(int argc, char *argv[]) {
     printf("wrote %zu elements out of %d requested\n", r, FILTER_SUPPORT);
   }
 
+  free(x);
   free(H);
   free(L);
   free(z);

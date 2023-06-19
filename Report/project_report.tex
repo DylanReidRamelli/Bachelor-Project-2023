@@ -8,10 +8,11 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{imakeidx}
+\usepackage{float}
 
 
 %opening
-\title{Spectrally Accurate Resampling of High Quality Rotated Images}
+\title{Rotation of multi-dimensional signals with spectrally accurate schemes}
 \author{Dylan Reid Ramelli}
 
 
@@ -25,7 +26,7 @@
 \end{committee}
 
 \abstract {
-	The idea of rotating an image might seem a trivial thing and until the work on this project began it was thought so as well. It became clear that rotation is a multi faceted operation that involves different steps. First we must acquire the image and to do that we must be able to sense it. Just like a robot arm in an assembly line needs to know which parts of the car go where, we must be able to take a discrete sample from a continuous signal. Once the image is acquired we need tools that are as accurate as possible and immune to disturbances to be able to perform accurate rotations on the image. This project, which is based on a research paper on rotating images using a convolution based interpolation \cite{main_article} will try to explore a similar way to rotate an image while maintaining a high degree of accuracy and performance. To do this the Fourier Transform's property of shift and of convolution of a signal with a filter kernel will be taken advantage of. What will also be shown is how the filter kernel was created in the frequency domain and the problems that the choice of filter might pose to the result of the shift.
+	The idea to take on this project began on the assumption that rotating an image might be a trivial task. It became clear that rotation is a multi faceted operation that involves different steps. First we must acquire the image and to do that we must be able to sense it. Just like a robot arm in an assembly line needs to know which parts of the car go where, we must be able to take a discrete sample from a continuous signal. Once the image is acquired we need tools that are as accurate as possible and immune to disturbances to be able to perform accurate rotations on the image. This project, which is based on a research paper on rotating images using a convolution based interpolation \cite{main_article} will try to explore a similar way to rotate an image while maintaining a high degree of accuracy and performance. To do this the Fourier Transform's property of shift and of convolution of a signal with a filter kernel will be taken advantage of. What will also be shown is how the filter kernel was created in the frequency domain and the problems that the choice of filter might pose to the result of the shift.
 	
 }
 
@@ -145,18 +146,16 @@
 	In our case we can represent the image as a one dimensional array ordered row-wise. 
 		
 	\subsection{Fourier Transform}
-	The Fourier transform of a function $g(x)$ is defined as follows:
+	In signal processing working in the frequency domain has a great advantage since a function expressed in this space can be reconstructed completely via an inverse process, with no loss of information.\cite{image_book}
+	For a function $g(x)$ to be represented in the frequency domain we must then make use of the Discrete Fourier transform which is defined as follows:
 	\begin{equation}
-		G_m = \displaystyle\sum_{k=0}^{N-1}g(k)e^{-i \frac{2\pi}{N}km}
+		G_m = \displaystyle\sum_{k=0}^{N-1}g_ke^{-i \frac{2\pi}{N}km}
 	\end{equation}
 	
-
-	
-	
-	To shift a signal by a fractional amount it is imperative to use the correct frequency when doing so.
-	
-	Given that for $n$ samples we have $\lfloor \frac{n}{2} \rfloor + 1$ distinct frequencies
-	
+	In this project the above equation will not be used since the filter that is going to be defined in one of the next chapters, will be created directly in the Fourier domain. Nevertheless it is useful to show the definition since it is the Inverse Discrete Fourier Transform which will be used to reconstruct the filter in the time domain. 
+	\begin{equation}
+		g_n = \frac{1}{N}\displaystyle\sum_{k=0}^{N-1}G_ke^{i \frac{2\pi}{N}kn}
+	\end{equation}
 	
 	
 	\subsection{Fourier Transform with Shift Theorem}
@@ -203,25 +202,41 @@
 		Z_m = e^{-i \frac{2\pi}{N}  \delta m} G_m = H_m \cdot G_m \label{shift_equation}
 	\end{equation}
 	
+	\subsection{Frequencies}
+	The final equation from the previous section \ref{shift_equation} works well for any kind of shift that we want to perform on our signal but for any fractional amount we encounter some problems with the use of the correct frequency indexes.
 	
-	The above equation \ref{shift_equation} works well for any kind of shift that we want to perform on our signal but for any fractional amount we encounter some problems with the use of the correct frequency indexes.
-	Here is a graphical example that was found to be useful: With an $N=3$ number of samples of a signal we have exactly $2$ distinct frequencies \ref{freq_equation} but the total frequencies are actually $3$ and they are $[0+i0, \frac{1}{2}+i\frac{\sqrt{3}}{2}, \frac{1}{2}-i\frac{\sqrt{3}}{2}]$. The last two frequencies are one the complex conjugate of the other.
+	If we use the corresponding frequency indexes in \ref{shift_equation} we will get a shift kernel:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\columnwidth]{images/Results/phase_shift_bad.png}
+		\caption{Shift kernel of size $n=50$}
+	\end{figure}
 	
+	And we can see that starting from $N/2$ we start getting negative values for the magnitude of each frequency. We do not want this(Explain)
 	
-	
-	"Explain why".\\
-	To solve this we need to take into consideration the negative frequencies and in particular if the number of samples is odd or even.
+	To solve this we need to take into consideration the negative frequencies.
 	Normally we multiply each sample by its corresponding phase, which is based on the frequency number $m$
 	but since we need to take into consideration the negative frequencies we can define a function called wavenum that returns the correct frequency index to use in the phase shift:
 	\begin{equation*}
 		wave\_n(m) = (m + \lfloor N/2 \rfloor ) \bmod N - \lfloor N/2 \rfloor
 	\end{equation*}
-	
+
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.5\columnwidth]{images/wavenum_n50.png}
 		\caption{Wavenum function with $N=50$}
 	\end{figure}
+	
+	This will give us the correct shift kernel:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\columnwidth]{images/Results/good_shift_filter.png}
+		\caption{Shift kernel of size $n=50$}
+	\end{figure}
+	
+	
+	
+	Modify original equation to use wavenum.
 	
 	\begin{equation*}
 		H_m = e^{-i \frac{2\pi}{N}  \delta \text{wave}\_n(m)}
@@ -260,7 +275,7 @@
 	\end{figure}
 	%
 	
-	For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simplex expression that defines M as:
+	For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simple expression that defines M as:
 	\begin{equation*}
 		M = 
 		\begin{cases}
@@ -269,10 +284,8 @@
 		\end{cases}
 	\end{equation*}
 	
-	With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible. for any fractional shift. 
+	With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible.
 	
-	
-	Now that we have our filters we can shift them by the fractional amount in the same way that we defined in equation \ref{shift_equation}. If for example we want to shift our original signal by $10.45$ we will start by creating our filter with $M=\frac{3}{2}$. Then we will apply a shift of $.45$ to the filter:
 	
 	\iffalse
 
@@ -347,6 +360,7 @@
 		Here is some pseudo-code that explain what is being done to our original filter:
 		\begin{algorithm}
 			\caption{Filter shift}\label{alg:cap}
+			Write convolution algorithm defined with compiler explorer
 		\end{algorithm}
 		
 		
@@ -359,11 +373,17 @@
 		The end goal has always been to shift by any real value so now we need to handle the integer part of the shift. First of all we need to clarify that if the shift does not have a fractional part then we skip all of the filter creation and convolution and just follow the simple operation that is defined here.
 		To shift a signal by an integer amount we will be using the C function \textsl{memcpy} to copy the values of the original array to a resulting array but at a different position, which is defined by the integer shift.
 		
-		
-		
+		\newpage
 		\section{Results}
 		\subsection{Results with 1D signals.}
-		Let us take as starting signal:
+		One dimensional signals are the starting point of our tests and as such we chose a pretty aggressive signal to test out. In this example we are using a starting signal of binary value of length $n=100$ samples and it is defined as:
+		\begin{equation*}
+			f(x) = 
+			\begin{cases}
+				1	& \quad \text{if } x \leq \frac{n}{2}\\
+				0	& \quad \text{otherwise}
+			\end{cases}
+		\end{equation*}
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=0.4\columnwidth]{images/original_signal.png}
@@ -371,8 +391,8 @@
 			\label{original_signal}
 		\end{figure}
 		
-		These are the results of shifting the signal by 20.25 for $M=\{1,\frac{3}{2},2,3\}$:
-		\begin{figure}[h]
+		By taking this signal and shifting it by $20.25$ we get a different result depending on the M chosen when creating the filter.
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.3\columnwidth]{images/Results/M_1.png}\hspace*{0.2\columnwidth}
 			\includegraphics[width=0.3\columnwidth]{images/Results/M_3_2.png}\\
@@ -387,39 +407,30 @@
 			\label{results_1}
 		\end{figure}
 		
-		At first glance we can see that with $M=1$ we have too many oscillations present in the resulting signal and with $M=3$ the signal is smoothed out too much. We can see though that if we set $M=1$ and the fractional value is small, for example $0.01$ we have less oscillations and the signal is more similar to the original.
+		At first glance we can see that with $M=1$ we have too many oscillations present in the resulting signal and with $M=3$ the signal is smoothed out too much. We can see though in figure \ref{small_shift_M_1} that if we set $M=1$ and the fractional value is small, for example $0.01$ we have less oscillations and the signal is more similar to the original.
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_small_shift.png}
 			\caption{Shift by $20.01$ with $M=1$}
 			\label{small_shift_M_1}
 		\end{figure}
 		
-		This is because the there are less oscillations in the kernel after the phase shift for small fractional shifts. In this case:
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_filter_small_shift.png}
-			\caption{Filter shifted by $0.01$ with $M=1$}
-			\label{small_shift_M_1_filter}
-		\end{figure}
-		
+		This is because when we build the kernel the shift operation does not create
 		We have maximum oscillations exactly at $0.5$ and with $M=1$:
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/Results/M_1_filter_big_shift.png}
-			\caption{Filter shifted by $0.5$ with $M=1$}
-			\label{big_shift_M_1_filter}
-		\end{figure}
-		
 		This is why for a fractional shift that get closer to $0.5$ it is necessary to use a bigger value for M such as $\frac{3}{2}$ or $2$ to smooth out the oscillations:
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
-			\includegraphics[width=0.4\columnwidth]{images/Results/M_2_filter_big_shift.png}
-			\caption{Filter shifted by $0.5$ with $M=2$}
-			\label{big_shift_M_2_filter}
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_1_filter_small_shift.png}\hspace*{0.2\columnwidth}
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_1_filter_big_shift.png}\\
+			\parbox{0.3\columnwidth}{\centering Filter shifted by $0.01$ with $M=1$}\hspace*{0.2\columnwidth}
+			\parbox{0.3\columnwidth}{\centering Filter shifted by $0.5$ with $M=1$}\\
+			\centering
+			\includegraphics[width=0.3\columnwidth]{images/Results/M_2_filter_big_shift.png}\\
+			\parbox{0.3\columnwidth}{\centering Filter shifted by $0.5$ with $M=2$}
+			\caption{Difference in oscillations with varying fractional shifts.}
+			\label{different_shifts_small_M}
 		\end{figure}
-		
 		
 		Here we could add a part where we show a simple implementation of choosing the right M for the corresponding amount of fractional shift by looking at which one preserves best the filter
 		

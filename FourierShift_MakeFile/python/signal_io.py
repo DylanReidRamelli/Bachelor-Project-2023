@@ -24,8 +24,8 @@ def read_data(image_path_original, image_path_modified, filter_path, shift):
 
     # Visualize the data as an image
     # plt.imshow(data, cmap='gray')
-    plt.plot(np.arange(n + 10), data, color='red')
-    plt.plot([(n/4)+ float(shift), (n/4) + float(shift)], [0, 1], color='green', linewidth=4)
+    plt.plot(np.arange(n), data, color='red')
+    plt.plot([0 + float(shift), 0 + float(shift)], [0, 1], color='green', linewidth=4)
     plt.plot([(n/2)+ float(shift), (n/2) + float(shift)], [0, 1], color='green', linewidth=4)
     plt.stem(np.arange(n), data_modified)
     # print(filter_data)
