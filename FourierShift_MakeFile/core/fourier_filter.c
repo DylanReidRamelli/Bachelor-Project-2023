@@ -81,7 +81,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
   // Reorder : got this
   // from:https://www.dsprelated.com/showthread/comp.dsp/20790-1.php
   // TODO: implement it myself.
-  int n2 = H_size / 2; // half of vector length
+  int n2 = H_size / 2;  // half of vector length
 
   for (int i = 0; i < n2; i++) {
     float complex tmp = z[i];
@@ -89,7 +89,7 @@ void shift_filter(float complex *H, float complex *L, float complex *z,
     z[i + n2] = tmp;
   }
 
-  if (H_size & 1) // odd n, shift the rest
+  if (H_size & 1)  // odd n, shift the rest
   {
     float complex tmp = z[H_size - 1];
     z[H_size - 1] = z[0];

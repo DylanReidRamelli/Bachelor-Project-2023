@@ -26,7 +26,7 @@
 \end{committee}
 
 \abstract {
-	The idea to take on this project began on the assumption that rotating an image might be a trivial task. It became clear that rotation is a multi faceted operation that involves different steps. First we must acquire the image and to do that we must be able to sense it. Just like a robot arm in an assembly line needs to know which parts of the car go where, we must be able to take a discrete sample from a continuous signal. Once the image is acquired we need tools that are as accurate as possible and immune to disturbances to be able to perform accurate rotations on the image. This project, which is based on a research paper on rotating images using a convolution based interpolation \cite{main_article} will try to explore a similar way to rotate an image while maintaining a high degree of accuracy and performance. To do this the Fourier Transform's property of shift and of convolution of a signal with a filter kernel will be taken advantage of. What will also be shown is how the filter kernel was created in the frequency domain and the problems that the choice of filter might pose to the result of the shift.
+	The idea to take on this project began on the assumption that rotating an image might be a considered a trivial task. It became clear that rotation is a multi faceted operation that involves different steps. First we must acquire the image and to do that we must be able to sense it. Just like a robot arm in an assembly line needs to know which parts of the car go where, we must be able to take a discrete sample from a continuous signal. Once the image is acquired we need tools that are as accurate as possible and immune to disturbances to be able to perform accurate rotations on the image. This project, which is based on a research paper on rotating images using a convolution based interpolation \cite{main_article} will try to explore a similar way to rotate an image while maintaining a high degree of accuracy and performance. To do this the Fourier Transform's property of shift and of convolution of a signal with a filter kernel will be taken advantage of. What will also be shown is how the filter kernel was created in the frequency domain and the problems that the choice of filter might pose to the result of the shift.
 	
 }
 
@@ -40,21 +40,19 @@
 	\section{Introduction, Motivation}\label{introduction}
 	
 	% Intro
-	For many years the amount of digital imaging data has been increasing exponentially (citation) and as such the need for acquiring this large data and process it with care has become a central point of focus. The goal of this project is to process high quality signals, in this case images, by rotating them using techniques such as the Fourier Transform, Shift Theorem, FIR filtering and CUDA parallel processing.
 	
+	What is the contribution in the project: How to create a filter, show implementation and maybe study the numerical performance
+	Accurate rotation requires the use of some fundamental signal processing concepts: Fourier domain and convolution of a signal with a filter. Filters are necessary in this work for their simplicity and ease of computational complexity. It will be shown how to create a filter to use as kernel for convolution with the original signal to rotate by fractional amounts. Something that is quite difficult to do accurately with traditional methods of interpolation for example. 
 	
 	%Motivations
 	
-	
-	
-	
-	The accurate rotation of images is very useful in many applications such as Data Augmentation for example. For Data augmentation we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally.
+	This work could become very useful in many applications that rely on accurate signal rotations such as Data Augmentation for example. In this case we want to increase the coverage of a certain dataset. In Convoluted Neural Networks we can augment the dataset by rotating the input images by some random rotation and then feeding them to the model to improve it without having to collect more data externally.
 	Another application of this technique can be seen in Data Visualization for multi-modal imaging. Images are taken at different times or in different ways, such as in a PET-CT scan and rotation can enable us to re-align the elements present in these images. In this case we can either acquire images at different times and then combine them together so that we can manipulate the images by rotation for example to align them correctly. Go into more detail.. ask Diego.
 	
+	The goal of this project is to process high quality multi-dimensional signals, by rotating them using techniques such as the Fourier Transform and filter convolution.
 	
 	
 	
-
 	
 	\section{State of the art}
 	For certain applications such as... it is required to be able to rotate images while maintaining the highest quality possible. To achieve satisfying results the general approach is to use bi-linear and nearest neighbor interpolation.
@@ -275,6 +273,23 @@
 	\end{figure}
 	%
 	
+	In figure \ref{filters} we can see the general shape of the function for each M and the number of samples it will use for convolution. It does not however give us a good idea on how it is going to modify the signal. In the next figure we can see the same filters but in the time domain.
+	% Filters.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_1_5.png} \\
+		\parbox{0.4\columnwidth}{\centering Filter with M = 1.} \hfill
+		\parbox{0.4\columnwidth}{\centering Filter with M = 2.}
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_3.png} \\
+		\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
+		\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
+		\caption{Filter}
+		\label{filters_ifft}
+	\end{figure}
+	%
+	
+	
 	For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simple expression that defines M as:
 	\begin{equation*}
 		M = 
@@ -370,8 +385,9 @@
 		
 		
 		\subsection{Integer Shift}
-		The end goal has always been to shift by any real value so now we need to handle the integer part of the shift. First of all we need to clarify that if the shift does not have a fractional part then we skip all of the filter creation and convolution and just follow the simple operation that is defined here.
-		To shift a signal by an integer amount we will be using the C function \textsl{memcpy} to copy the values of the original array to a resulting array but at a different position, which is defined by the integer shift.
+		Now that the fractional part of the shift has been taken care of we need to shift the signal by the integer value.
+		First of all it should be clarified that if the shift does not have a fractional part then we skip the convolution with the filter entirely.
+		To shift a signal by an integer amount we used the C function \textsl{memcpy} to copy the values of the original array to a resulting array but at a different position, which is defined by the integer shift. We chose \textsl{memcpy} instead of just moving the values inside the same array with \textsl{memmove} since \textsl{memcpy} is designed to be the fastest library routine to copy data from memory to memory.
 		
 		\newpage
 		\section{Results}
@@ -416,9 +432,8 @@
 			\label{small_shift_M_1}
 		\end{figure}
 		
-		This is because when we build the kernel the shift operation does not create
-		We have maximum oscillations exactly at $0.5$ and with $M=1$:
-		This is why for a fractional shift that get closer to $0.5$ it is necessary to use a bigger value for M such as $\frac{3}{2}$ or $2$ to smooth out the oscillations:
+		This result is attributed to the fact that the filter contains fewer oscillations as well. In fact if we take a look at the filter defined for $M=1$ we can see that we have maximum oscillations exactly at $0.5$. 
+		This is why for a fractional shift that gets closer to $0.5$ it is necessary to use a bigger value for M such as $\frac{3}{2}$ or $2$ to smooth out the oscillations.
 		\begin{figure}[H]
 			\centering
 			\includegraphics[width=0.3\columnwidth]{images/Results/M_1_filter_small_shift.png}\hspace*{0.2\columnwidth}
@@ -431,9 +446,8 @@
 			\caption{Difference in oscillations with varying fractional shifts.}
 			\label{different_shifts_small_M}
 		\end{figure}
-		
-		Here we could add a part where we show a simple implementation of choosing the right M for the corresponding amount of fractional shift by looking at which one preserves best the filter
-		
+
+				
 		
 		\subsection{Results on 2D signals, i.e images}
 		
@@ -441,7 +455,7 @@
 		\section{Conclusion}
 		
 		\section{Future works}
-		One way to improve upon this work would be to implement the code with CUDA
+		One way to improve upon this work would be to implement the code with CUDA, create a function that chooses which M to use based on the fractional shift and the error.
 	
 	
 	\bibliographystyle{plain}

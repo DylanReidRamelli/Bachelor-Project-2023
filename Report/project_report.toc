@@ -8,10 +8,10 @@
 \contentsline {section}{\numberline {4}Implementation and Project Design}{6}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Libraries}{6}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Creating a Filter in the Frequency domain}{6}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Convolution Implementation}{7}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Integer Shift}{7}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Results}{8}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Results with 1D signals.}{8}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Results on 2D signals, i.e images}{9}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Conclusion}{9}{section.6}%
-\contentsline {section}{\numberline {7}Future works}{9}{section.7}%
+\contentsline {subsection}{\numberline {4.3}Convolution Implementation}{8}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Integer Shift}{8}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Results}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Results with 1D signals.}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Results on 2D signals, i.e images}{10}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Conclusion}{10}{section.6}%
+\contentsline {section}{\numberline {7}Future works}{10}{section.7}%

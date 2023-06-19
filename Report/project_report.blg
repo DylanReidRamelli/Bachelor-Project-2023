@@ -7,6 +7,10 @@ Database file #1: references.bib
  :  title
  :       {Compiler Explorer},
 I'm skipping whatever remains of this entry
+"{" immediately follows a field name---line 21 of file references.bib
+ :  title
+ :       {cppreference},
+I'm skipping whatever remains of this entry
 Name 1 in "Michel Unser, Senior Member, IEEE, Philippe Thévenaz, and Leonid Yaroslavsky" has a comma at the end for entry main_article
 while executing---line 1049 of file plain.bst
 Too many commas in name 1 of "Michel Unser, Senior Member, IEEE, Philippe Thévenaz, and Leonid Yaroslavsky" for entry main_article
@@ -60,4 +64,4 @@ warning$ -- 4
 while$ -- 6
 width$ -- 4
 write$ -- 21
-(There were 5 error messages)
+(There were 6 error messages)
