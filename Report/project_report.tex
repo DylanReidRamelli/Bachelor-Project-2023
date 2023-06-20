@@ -41,6 +41,15 @@
 	
 	% Intro
 	
+	Mini scaletta:
+	\begin{itemize}
+		\item Concetto generale
+		\item Motivazione sul perche ce bisogno di rotazioni.
+		\item Vantaggio della rotazione spettrale
+		\item Quali sono i contributi  che sono stati fatti in questo lavoro
+		\item spigazione di un paragrafo su cosa ogni capitolo si parla
+	\end{itemize}
+	
 	What is the contribution in the project: How to create a filter, show implementation and maybe study the numerical performance
 	Accurate rotation requires the use of some fundamental signal processing concepts: Fourier domain and convolution of a signal with a filter. Filters are necessary in this work for their simplicity and ease of computational complexity. It will be shown how to create a filter to use as kernel for convolution with the original signal to rotate by fractional amounts. Something that is quite difficult to do accurately with traditional methods of interpolation for example. 
 	
@@ -274,20 +283,7 @@
 	%
 	
 	In figure \ref{filters} we can see the general shape of the function for each M and the number of samples it will use for convolution. It does not however give us a good idea on how it is going to modify the signal. In the next figure we can see the same filters but in the time domain.
-	% Filters.
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.4\columnwidth]{images/filter_m_1.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_1_5.png} \\
-		\parbox{0.4\columnwidth}{\centering Filter with M = 1.} \hfill
-		\parbox{0.4\columnwidth}{\centering Filter with M = 2.}
-		\centering
-		\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png} \hfill		\includegraphics[width=0.4\columnwidth]{images/filter_m_3.png} \\
-		\parbox{0.4\columnwidth}{\centering Filter with M = 2.} \hfill
-		\parbox{0.4\columnwidth}{\centering Filter with M = 3.}
-		\caption{Filter}
-		\label{filters_ifft}
-	\end{figure}
-	%
+	% Filters. % impulse reposne
 	
 	
 	For better accuracy we generally choose our interval M to be small when we have a small fractional shift and big when we have a fractional shift that gets closer to $0.5$. We could write a simple expression that defines M as:
@@ -300,6 +296,42 @@
 	\end{equation*}
 	
 	With some experimenting we found that the filter with $M=3/2$ is a good compromise between smoothing the values and keeping them as accurate as possible.
+	
+	\newpage
+		\subsection{Creating a Filter in the Frequency domain}
+	So first off we need to build our kernel. As an example we will create one of size $40$ with $M=2$ since we will be shifting by a fractional amount. To create the kernel then we follow equation \ref{filter_formula}, while also paying attention to evaluating the limit when $\omega=\frac{\pi}{M}$ or $\omega=-\frac{\pi}{M}$. This gives us:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png}
+		\caption{Filter with $M=2$}
+		\label{original_filter}
+	\end{figure}
+	
+	
+	
+	Now let us say that the fractional amount to shift is $0.25$. To implement this we can use a simple for loop that multiplies each frequency value of the filter by it's corresponding shift \ref{phase_shift_equation}.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/filter_m_2_25_shift.png}
+		\caption{Filter with $M=2$ after shift of $0.25$}
+		\label{shifted_filter}
+	\end{figure}
+	
+	Afterwards we implemented a simple version of the inverse Fourier transform, which give us our signal in the time domain. Before returning the result however we need to perform the equivalent of numpy's fftshift function to have the filter values centered. This whole operation can be done in serial and with no real optimization of the code since the kernel size will always be much smaller than the input signal and as such will no be computationally expensive.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\columnwidth]{images/ifft_filter_m_2_25_shift.png}
+		\caption{Filter with $M=2$ in spatial domain.}
+		\label{final_filter}
+	\end{figure}
+	
+	
+	
+	Here is some pseudo-code that explain what is being done to our original filter:
+	\begin{algorithm}
+		\caption{Filter shift}\label{alg:cap}
+		Write convolution algorithm defined with compiler explorer
+	\end{algorithm}
 	
 	
 	\iffalse
@@ -336,6 +368,17 @@
 	\newpage
 	
 	\section{Implementation and Project Design}
+	
+		\begin{itemize}
+			\item Link github page and wxaplin hwo to run an example
+			\item creazione filtro e spiegare perche IFT invece di ifft
+			\item perche direct convolution invece di fft
+			\item code generation at compile time with python script
+			\item piccola spiegazione su SIMD e metodo di convoluzione per facilitare la vettorizzazione dell'assembly code
+		\end{itemize}
+	
+	
+	
 		Since the premise of this project is based on the fact that a rotation can be performed with three 1D operations, the bottom-up approach was a no-brainer. We started with the fundamentals of signal processing by exploring the Fourier Transform and Shift Theorem to build our shift kernel. We used Jupyter Notebook extensively to test our method and quickly plot the results, while also documenting everything so that it would be easy to write this report. Since we used the bottom-up approach we were able to re-use parts of the code to test some other aspect of the shift. We started with simple shifts of a 1D signal by an integer value which proved to be quite simple and then we tried to shift the same signal by a fractional amount. This is where some problems arose because some care is needed while shifting each frequency by the correct phase shift.
 		The complete the project the tools that were used were mainly: MakeFile, CMake, Jupyter Notebook and some built-in libraries of C and Python like numpy and matplotlib.
 		
@@ -343,40 +386,6 @@
 		Numpy and Matplotlib were a huge help in plotting the results of our initial tests of the Fourier Transform and of the final results. These libraries were also useful for when we started writing code in C. Where we would output the binary result to a file and then read it and plot the result in python. There are a few plotting libraries for C but we felt that this was just the faster/easier solution.
 		The whole project started out as a CMake and this was chosen mainly because I was already familiar with this tool and was able to quickly setup an environment that would build the executable. However towards the end we decided to just use a plain Makefile to keep everything nice and simple.
 		
-		\subsection{Creating a Filter in the Frequency domain}
-		So first off we need to build our kernel. As an example we will create one of size $40$ with $M=2$ since we will be shifting by a fractional amount. To create the kernel then we follow equation \ref{filter_formula}, while also paying attention to evaluating the limit when $\omega=\frac{\pi}{M}$ or $\omega=-\frac{\pi}{M}$. This gives us:
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/filter_m_2.png}
-			\caption{Filter with $M=2$}
-			\label{original_filter}
-		\end{figure}
-		
-		
-		
-		Now let us say that the fractional amount to shift is $0.25$. To implement this we can use a simple for loop that multiplies each frequency value of the filter by it's corresponding shift \ref{phase_shift_equation}.
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.4\columnwidth]{images/filter_m_2_25_shift.png}
-			\caption{Filter with $M=2$ after shift of $0.25$}
-			\label{shifted_filter}
-		\end{figure}
-		
-		 Afterwards we implemented a simple version of the inverse Fourier transform, which give us our signal in the time domain. Before returning the result however we need to perform the equivalent of numpy's fftshift function to have the filter values centered. This whole operation can be done in serial and with no real optimization of the code since the kernel size will always be much smaller than the input signal and as such will no be computationally expensive.
-		 \begin{figure}[h]
-		 	\centering
-		 	\includegraphics[width=0.4\columnwidth]{images/ifft_filter_m_2_25_shift.png}
-		 	\caption{Filter with $M=2$ in spatial domain.}
-		 	\label{final_filter}
-		 \end{figure}
-		 
-		 
-		
-		Here is some pseudo-code that explain what is being done to our original filter:
-		\begin{algorithm}
-			\caption{Filter shift}\label{alg:cap}
-			Write convolution algorithm defined with compiler explorer
-		\end{algorithm}
 		
 		
 		\subsection{Convolution Implementation}
@@ -453,8 +462,7 @@
 		
 		
 		\section{Conclusion}
-		
-		\section{Future works}
+		Summary of the report, What was achieved, limits of the method, any improvements,...
 		One way to improve upon this work would be to implement the code with CUDA, create a function that chooses which M to use based on the fractional shift and the error.
 	
 	
