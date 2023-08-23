@@ -1,22 +1,17 @@
-\contentsline {section}{\numberline {1}Introduction}{A}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Structure of the report}{A}{subsection.1.1}%
-\contentsline {section}{\numberline {2}Methodology}{A}{section.2}%
-\contentsline {section}{\numberline {3}Implementation}{A}{section.3}%
-\contentsline {section}{\numberline {4}Results}{A}{section.4}%
-\contentsline {section}{\numberline {5}Conclusion}{A}{section.5}%
-\contentsline {section}{\numberline {6}Introduction, Motivation}{2}{section.6}%
-\contentsline {section}{\numberline {7}State of the art}{2}{section.7}%
-\contentsline {section}{\numberline {8}Methodology}{2}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Fourier Transform}{3}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Fourier Transform with Shift Theorem}{3}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Frequencies}{4}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Filter}{5}{subsection.8.4}%
-\contentsline {subsection}{\numberline {8.5}Creating a Filter in the Frequency domain}{6}{subsection.8.5}%
-\contentsline {section}{\numberline {9}Implementation and Project Design}{8}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Libraries}{8}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Convolution Implementation}{8}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Integer Shift}{8}{subsection.9.3}%
-\contentsline {section}{\numberline {10}Results}{9}{section.10}%
-\contentsline {subsection}{\numberline {10.1}Results with 1D signals.}{9}{subsection.10.1}%
-\contentsline {subsection}{\numberline {10.2}Results on 2D signals, i.e images}{10}{subsection.10.2}%
-\contentsline {section}{\numberline {11}Conclusion}{10}{section.11}%
+\contentsline {section}{\numberline {1}Introduction, Motivation}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Light transport}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Manipulating frequency components of an image}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Methodology}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}2D rotation as 1D translation}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Fourier Transform}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Derivation of the shift interpolant}{4}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Interpretation of frequencies for fractional shifts}{4}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Smoothing Filter (Low-Pass)}{5}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Creating a Filter in the Frequency domain}{6}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Implementation and Project Design}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Libraries}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Efficient implementation of direct convolution on x86 microarchitectures}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Integer Shift}{8}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Results}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Results with 1D signals.}{9}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Conclusion}{10}{section.5}%

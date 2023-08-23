@@ -1,0 +1,75 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{main_article}
+\citation{high_quality_1}
+\citation{high_quality_2}
+\citation{slice}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Large-scale in-silico investigation of homeostasis in the subarachnoid space of the human optic nerve [Rossinelli et al. 2023, in-preparation]. Homeostasis is directly related with the interaction between the cerebrospinal fluid flow (not shown here) and the meningeal surface. Blue denotes poor levels of homeostasis, whereas red denotes sufficient material exchange between fluid and structure.\relax }}{2}{figure.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:optical_nerve_3D}{{1}{2}{Large-scale in-silico investigation of homeostasis in the subarachnoid space of the human optic nerve [Rossinelli et al. 2023, in-preparation]. Homeostasis is directly related with the interaction between the cerebrospinal fluid flow (not shown here) and the meningeal surface. Blue denotes poor levels of homeostasis, whereas red denotes sufficient material exchange between fluid and structure.\relax }{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction and Motivation}{2}{section.1}\protected@file@percent }
+\newlabel{introduction}{{1}{2}{Introduction and Motivation}{section.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Prior Work and Methods}{2}{section.2}\protected@file@percent }
+\citation{neuralengine}
+\citation{main_article}
+\citation{main_article}
+\citation{main_article}
+\citation{main_article}
+\citation{main_article}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Two different types of data analysis, on the same data set. Gray-scale slice of the subarachnoid space of the optic nerve (left) and close-up view of the subarachnoid space of the optic nerve (right). The signal is the same, but the two data processing approaches lead to qualitative different insight.\relax }}{3}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:closeup}{{2}{3}{Two different types of data analysis, on the same data set. Gray-scale slice of the subarachnoid space of the optic nerve (left) and close-up view of the subarachnoid space of the optic nerve (right). The signal is the same, but the two data processing approaches lead to qualitative different insight.\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Factoring 3D Rotations into 2D Rotations}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Factoring 2D Rotations in 1D translations}{3}{subsection.2.2}\protected@file@percent }
+\newlabel{3_translations}{{1}{3}{Factoring 2D Rotations in 1D translations}{equation.2.1}{}}
+\citation{main_article}
+\citation{main_article}
+\citation{unser1993b}
+\citation{a100whitepaper}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Rotation of an image is carried out by cascading translation operations, courtesy of Unser et al. \cite  {main_article}.\relax }}{4}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:chinese_rotation}{{3}{4}{Rotation of an image is carried out by cascading translation operations, courtesy of Unser et al. \cite {main_article}.\relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Resampling Translation with Finite Impulse Response (FIR) Filters}{4}{subsection.2.3}\protected@file@percent }
+\newlabel{direct_convolution_equation}{{4}{4}{Resampling Translation with Finite Impulse Response (FIR) Filters}{equation.2.4}{}}
+\citation{main_article}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Example of a FIR filter $z(t)$ that we will create.\relax }}{5}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:final_filter}{{4}{5}{Example of a FIR filter $z(t)$ that we will create.\relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Design of the Translation Filter $H(\omega )$}{5}{subsection.2.4}\protected@file@percent }
+\citation{hamming1998digital}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Different enumeration of the discrete frequencies (left), and correct enumeration for translating signals (right), function on $n=40$ samples.\relax }}{6}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:wavenum_plot}{{5}{6}{Different enumeration of the discrete frequencies (left), and correct enumeration for translating signals (right), function on $n=40$ samples.\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Integer Shifts}{6}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Design of the Smoothing Filter $F(\omega )$}{6}{subsection.2.6}\protected@file@percent }
+\newlabel{filter_formula}{{8}{6}{Design of the Smoothing Filter $F(\omega )$}{equation.2.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Compact schemes of different M for local computation.\relax }}{7}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:filters}{{6}{7}{Compact schemes of different M for local computation.\relax }{figure.caption.7}{}}
+\newlabel{filter_formula}{{10}{7}{Design of the Smoothing Filter $F(\omega )$}{equation.2.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Software Implementation Details}{7}{section.3}\protected@file@percent }
+\citation{godbolt}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The two filters $H(\omega )$ and $F(\omega )$.\relax }}{8}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:h_f_filters}{{7}{8}{The two filters $H(\omega )$ and $F(\omega )$.\relax }{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Static assessment with {\it  Godbolt Compiler Explorer} of a direct convolution with an 8-coefficients filter on an arbitrary long digital signal. C kernel (left), successfully compiled for AVX2 enabled microarchitectures (right, top), and microarchitectures featuring AVX-512 SIMD instructions(right,bottom). \relax }}{8}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:conv_assembly}{{8}{8}{Static assessment with {\it Godbolt Compiler Explorer} of a direct convolution with an 8-coefficients filter on an arbitrary long digital signal. C kernel (left), successfully compiled for AVX2 enabled microarchitectures (right, top), and microarchitectures featuring AVX-512 SIMD instructions(right,bottom). \relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Original signal of size $n=100$ samples (Left) shifted by $\delta = 20.01$ with $M=1$(Right).\relax }}{9}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:original_signal}{{9}{9}{Original signal of size $n=100$ samples (Left) shifted by $\delta = 20.01$ with $M=1$(Right).\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{9}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Results with 1D signals.}{9}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion and Outlook}{9}{section.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Results of shifting the original signal $g(x)$ by $\delta =20.25$ with different sizes of $M$.\relax }}{10}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:results_1}{{10}{10}{Results of shifting the original signal $g(x)$ by $\delta =20.25$ with different sizes of $M$.\relax }{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Difference in oscillations with varying fractional shifts. $F(\omega )$ shifted by $0.01$ with $M=1$ (Left), $F(\omega )$ shifted by $0.5$ with $M=1$ (Middle) and $F(\omega )$ shifted by 0.5 with $M=2$(Right).\relax }}{10}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:different_shifts_small_M}{{11}{10}{Difference in oscillations with varying fractional shifts. $F(\omega )$ shifted by $0.01$ with $M=1$ (Left), $F(\omega )$ shifted by $0.5$ with $M=1$ (Middle) and $F(\omega )$ shifted by 0.5 with $M=2$(Right).\relax }{figure.caption.12}{}}
+\bibstyle{plain}
+\bibdata{references}
+\gdef \@abspage@last{12}

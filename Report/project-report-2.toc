@@ -1,0 +1,12 @@
+\contentsline {section}{\numberline {1}Introduction and Motivation}{2}{section.1}%
+\contentsline {section}{\numberline {2}Prior Work and Methods}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Factoring 3D Rotations into 2D Rotations}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Factoring 2D Rotations in 1D translations}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Resampling Translation with Finite Impulse Response (FIR) Filters}{4}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Design of the Translation Filter $H(\omega )$}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Integer Shifts}{6}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Design of the Smoothing Filter $F(\omega )$}{6}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Software Implementation Details}{7}{section.3}%
+\contentsline {section}{\numberline {4}Results}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Results with 1D signals.}{9}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Conclusion and Outlook}{9}{section.5}%
