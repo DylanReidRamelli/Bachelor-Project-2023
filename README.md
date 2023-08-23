@@ -1,2 +1,2 @@
-# Bachelor Project 2023 - Spectrally Accurate Resampling of High-Quality Rotated Images.
+# Bachelor Project 2023 - Rotation of multidimensional signals with spectral schemes.
 Dylan Ramelli, Patrick Zulian, Diego Rossinelli
